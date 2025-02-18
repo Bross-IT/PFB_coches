@@ -107,6 +107,64 @@ def limpiar_csv(ruta_archivo_csv):
     df["combustible"] = df["combustible"].replace("Gasolina y corriente eléctrica", "Híbrido")
     df["combustible"] = df["combustible"].replace("Corriente eléctrica", "Eléctrico")
 
+    #rename de localizacion a provincia y creacion de columna comunidad 
+    df.rename(columns={"localizacion": "provincia"}, inplace=True)
+    provincias_comunidades = {
+    "A Coruña": "Galicia",
+    "Álava": "País Vasco",
+    "Albacete": "Castilla-La Mancha",
+    "Alicante": "Comunidad Valenciana",
+    "Almería": "Andalucía",
+    "Asturias": "Asturias",
+    "Ávila": "Castilla y León",
+    "Badajoz": "Extremadura",
+    "Baleares": "Islas Baleares",
+    "Barcelona": "Cataluña",
+    "Burgos": "Castilla y León",
+    "Cáceres": "Extremadura",
+    "Cádiz": "Andalucía",
+    "Cantabria": "Cantabria",
+    "Castellón": "Comunidad Valenciana",
+    "Ciudad Real": "Castilla-La Mancha",
+    "Córdoba": "Andalucía",
+    "Cuenca": "Castilla-La Mancha",
+    "Girona": "Cataluña",
+    "Granada": "Andalucía",
+    "Guadalajara": "Castilla-La Mancha",
+    "Guipúzcoa": "País Vasco",
+    "Huelva": "Andalucía",
+    "Huesca": "Aragón",
+    "Jaén": "Andalucía",
+    "La Rioja": "La Rioja",
+    "Las Palmas": "Canarias",
+    "León": "Castilla y León",
+    "Lleida": "Cataluña",
+    "Lugo": "Galicia",
+    "Madrid": "Comunidad de Madrid",
+    "Málaga": "Andalucía",
+    "Murcia": "Región de Murcia",
+    "Navarra": "Navarra",
+    "Ourense": "Galicia",
+    "Palencia": "Castilla y León",
+    "Pontevedra": "Galicia",
+    "Salamanca": "Castilla y León",
+    "Santa Cruz de Tenerife": "Canarias",
+    "Segovia": "Castilla y León",
+    "Sevilla": "Andalucía",
+    "Soria": "Castilla y León",
+    "Tarragona": "Cataluña",
+    "Teruel": "Aragón",
+    "Toledo": "Castilla-La Mancha",
+    "Valencia": "Comunidad Valenciana",
+    "Valladolid": "Castilla y León",
+    "Vizcaya": "País Vasco",
+    "Zamora": "Castilla y León",
+    "Zaragoza": "Aragón",
+    "Ceuta": "Ceuta",
+    "Melilla": "Melilla"
+    }
+    df["comunidad"] = df["provincia"].map(provincias_comunidades)
+
     # guardar df limpio en nuevo csv
     ruta_archivo_limpio = ruta_archivo_csv.replace(".csv", "_limpio.csv")
     df.to_csv(ruta_archivo_limpio, index=False)
