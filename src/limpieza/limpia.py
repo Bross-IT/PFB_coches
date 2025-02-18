@@ -102,6 +102,11 @@ def limpiar_csv(ruta_archivo_csv):
     df.rename(columns={'cambio': 'cambio_automatico'}, inplace=True)
     df['cambio_automatico'] = df['cambio_automatico'].apply(lambda x: True if x == 'Automático' else False)
 
+    # combustible
+    df["combustible"] = df["combustible"].replace("Diesel", "Diésel")
+    df["combustible"] = df["combustible"].replace("Gasolina y corriente eléctrica", "Híbrido")
+    df["combustible"] = df["combustible"].replace("Corriente eléctrica", "Eléctrico")
+
     # guardar df limpio en nuevo csv
     ruta_archivo_limpio = ruta_archivo_csv.replace(".csv", "_limpio.csv")
     df.to_csv(ruta_archivo_limpio, index=False)
