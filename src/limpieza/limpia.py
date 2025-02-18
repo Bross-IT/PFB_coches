@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 def limpiar_csv(ruta_archivo_csv):
     """
@@ -101,6 +102,8 @@ def limpiar_csv(ruta_archivo_csv):
     df.rename(columns={'cambio': 'cambio_automatico'}, inplace=True)
     df['cambio_automatico'] = df['cambio_automatico'].apply(lambda x: True if x == 'Automático' else False)
 
-    df.to_csv('coches_segunda_mano_limpio.csv', index=False)
+    # guardar df limpio en nuevo csv
+    ruta_archivo_limpio = ruta_archivo_csv.replace(".csv", "_limpio.csv")
+    df.to_csv(ruta_archivo_limpio, index=False)
 
     return df
