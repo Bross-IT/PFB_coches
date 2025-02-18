@@ -110,7 +110,7 @@ def limpiar_csv(ruta_archivo_csv):
     #rename de localizacion a provincia y creacion de columna comunidad 
     df.rename(columns={"localizacion": "provincia"}, inplace=True)
     provincias_comunidades = {
-    "A Coruña": "Galicia",
+    "La Coruña": "Galicia",
     "Álava": "País Vasco",
     "Albacete": "Castilla-La Mancha",
     "Alicante": "Comunidad Valenciana",
