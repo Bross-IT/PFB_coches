@@ -3,3 +3,4 @@
 documentos/
 __pycache__/
 .ipynb_checkpoints/
+src/tests.py
