@@ -1,2 +1,2 @@
-from scraper import scraper
+from extraction import seleniumScraper
 from limpieza import limpia
