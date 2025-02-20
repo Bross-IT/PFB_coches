@@ -1,1 +1,1 @@
-from scraper import scraper
+from extraction import seleniumScraper
