@@ -14,6 +14,9 @@ def limpiar_csv(ruta_archivo_csv):
     """
     df = pd.read_csv(ruta_archivo_csv)
 
+    #Eliminar duplicados
+    df =  df.drop_duplicates(subset=['referencia'], keep='first')
+
     # Extraer marca sola
     df['marca_sola'] = df['marca'].apply(lambda x: x.split()[0] if isinstance(x, str) else x)
 
@@ -41,6 +44,7 @@ def limpiar_csv(ruta_archivo_csv):
     df['referencia'] = pd.to_numeric(df['referencia'].str.replace('ref', ''), errors='coerce')
 
     # tipo_vendedor
+    df['vendedor']=df['vendedor'].fillna("-") # llenar nan con "-"
     df["nombre_vendedor_profesional"] = pd.Series(dtype="string")
     mask = df['vendedor'].str.endswith('\nProfesional')
     df.loc[mask, 'nombre_vendedor_profesional'] = df.loc[mask, 'vendedor'].str.split('\nProfesional').str[0]
