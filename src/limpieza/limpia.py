@@ -73,12 +73,13 @@ def limpiar_csv(ruta_archivo_csv):
     df["carroceria"] = df["carroceria"].replace("Roadster", "Descapotable o convertible")
     df["carroceria"] = df["carroceria"].replace("-", "Pequeño")
     df["carroceria"] = df["carroceria"].replace("Stationwagon", "Familiar")
-    
+
     # plazas
     df["plazas"] = pd.to_numeric(df["plazas"].str.replace(" asientos", ""), errors='coerce')
 
     # puertas
     df["puertas"] = pd.to_numeric(df["puertas"].str.replace(" Puertas", ""), errors='coerce')
+    df['puertas'] = df['puertas'].apply(lambda x: np.nan if x == 0 else x)
 
     # consumo_medio
     df['consumo_medio'] = df['consumo_medio'].replace([r'.*Consumo medio\r\n0,00\r\nlitros.*', r'.*Consumo medio\r\nlitros.*'], np.nan, regex=True)
