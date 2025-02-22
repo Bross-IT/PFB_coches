@@ -55,74 +55,60 @@ class SeleniumScraper:
 
     def get_current_page(self, url: str) -> int:
         parametros: dict = parse_qs(urlparse(url).query)
-
         return int(parametros.get("page", [1])[0]) 
     
     def get_features_cars(self) -> np.array:
         marca: str = self.driver.find_element(by = By.TAG_NAME, value = "h1").text
-        
         spans = self.driver.find_element(by=By.XPATH, value="//div[@class='etiquetas']").find_elements(by = By.TAG_NAME, value = "span")
         
         localizacion: str = [ spans[-1].text if spans[-1].text != "" else spans[-2].text ][0]
         if localizacion == "":
             with open("../data/localizacion_errors.txt", "w") as file:
                 file.write(str(f"localizacion: {localizacion} , url: {self.driver.current_url}"))
-
         try:
             distintivo_ambiental: str = self.driver.find_element(by=By.XPATH, value="//div[@class='etiquetas']").find_element(by = By.TAG_NAME, value = "img").get_attribute("alt")
         except NoSuchElementException as nse:
             distintivo_ambiental: str =''
-
         try:
             anio: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-calendario']").find_element(By.XPATH, "./parent::li").text.split(":")[1].strip()
         except NoSuchElementException as nse:
             anio: str = ''
-        
         try:
             kilometraje: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-velocimetro']").find_element(By.XPATH, "./parent::li").text.strip()
         except NoSuchElementException as nse:
             kilometraje: str = ''
-        
         try:
             combustible: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-combustible']").find_element(By.XPATH, "./parent::li").text.strip()
         except NoSuchElementException as nse:
             combustible: str = ''
-
         try:
             garantia: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-file']").find_element(By.XPATH, "./parent::li").text.split(":")[1].strip()
         except NoSuchElementException as nse:
             garantia: str = ''
-        
         try:
             cambio: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-cambio-manual']").find_element(By.XPATH, "./parent::li").text.strip()
         except NoSuchElementException as nse:
             cambio: str = ''
-        
         try:
             carroceria: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-coche-masa']").find_element(By.XPATH, "./parent::li").text.strip()
         except NoSuchElementException as nse:
             carroceria: str = ''
-        
         try:
             plazas: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-chairs']").find_element(By.XPATH, "./parent::li").text.strip()
         except NoSuchElementException as nse:
             plazas: str = ''
-        
         try:
             potencia: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-motor']").find_element(By.XPATH, "./parent::li").text.strip()
         except NoSuchElementException as nse:
             potencia: str = ''
-        
         try:
             puertas: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-puerta']").find_element(By.XPATH, "./parent::li").text.strip()
         except NoSuchElementException as nse:
             puertas: str = ''
-        
         try:
             color: str = self.driver.find_element(by = By.XPATH, value = "//li//span[@class='icon icon-cubo']").find_element(By.XPATH, "./parent::li").text.strip()
         except NoSuchElementException as nse:
             color: str = ''
-        
         try:
             precio: str = self.driver.find_elements(by=By.XPATH, value="//ul[@class='tabla-precio']//li")[0].text.split(":")[1].strip()
         except IndexError as ie:
@@ -137,14 +123,12 @@ class SeleniumScraper:
             self.driver.execute_script("arguments[0].scrollIntoView();", tab_spec_2)
             tab_spec_2.click()
             time.sleep(1)
-        
         consumo_medio: str = self.get_text(by = By.XPATH, value = '//ul[contains(@class,"tab-spec-2")]/li').strip()
 
         try:
             vendedor: str = self.driver.find_element(by = By.XPATH, value = "//div[@class='datos-concesionario']").find_element(By.TAG_NAME, "p").text.strip()
         except NoSuchElementException as nse:
             vendedor: str = ''
-        
         try:
             self.driver.find_element(by = By.XPATH, value = "//span[@class='icon icon-certificado']").text.strip()
             certificado: str = "Si"
@@ -152,14 +136,12 @@ class SeleniumScraper:
             certificado: str = 'No'
         
         fecha_extraccion: datetime.datetime = datetime.datetime.now()
-
         url_actual: str = self.current_url()
         referencia: str = url_actual.split("-")[-1]
 
         try:
             url_imagen: str = self.get_attribute(by=By.XPATH, value="//img[contains(normalize-space(@class), 'type-image')]", attribute = "src")
             response_img = requests.get(url_imagen)
-            
             if url_imagen != '':
                 ruta_imagen: str = f"../img/coches/{url_imagen.split('/')[-1].split("?")[0]}"
                 with open(ruta_imagen, "wb") as file:
