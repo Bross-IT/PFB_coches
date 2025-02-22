@@ -79,8 +79,7 @@ def limpiar_csv(ruta_archivo_csv):
 
     # puertas
     df["puertas"] = pd.to_numeric(df["puertas"].str.replace(" Puertas", ""), errors='coerce')
-    df['puertas'] = df['puertas'].apply(lambda x: np.nan if x == 0 else x)
-
+ 
     # consumo_medio
     df['consumo_medio'] = df['consumo_medio'].replace([r'.*Consumo medio\r\n0,00\r\nlitros.*', r'.*Consumo medio\r\nlitros.*'], np.nan, regex=True)
     df['consumo_medio'] = df['consumo_medio'].str.extract(r'Consumo medio\r\n([\d,]+)\r\nlitros')[0]
