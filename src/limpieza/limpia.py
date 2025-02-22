@@ -67,8 +67,13 @@ def limpiar_csv(ruta_archivo_csv):
 
     # carrocería
     df["carroceria"] = df["carroceria"].replace("Berlina mediana o grande", "Berlina")
+    df["carroceria"] = df["carroceria"].replace("Targa", "Berlina")
+    df["carroceria"] = df["carroceria"].replace("Coupe", "Deportivo o coupé ")
+    df["carroceria"] = df["carroceria"].replace("Convertible", "Descapotable o convertible")
+    df["carroceria"] = df["carroceria"].replace("Roadster", "Descapotable o convertible")
+    df["carroceria"] = df["carroceria"].replace("-", "Pequeño")
     df["carroceria"] = df["carroceria"].replace("Stationwagon", "Familiar")
-
+    
     # plazas
     df["plazas"] = pd.to_numeric(df["plazas"].str.replace(" asientos", ""), errors='coerce')
 
@@ -76,8 +81,8 @@ def limpiar_csv(ruta_archivo_csv):
     df["puertas"] = pd.to_numeric(df["puertas"].str.replace(" Puertas", ""), errors='coerce')
 
     # consumo_medio
-    df['consumo_medio'] = df['consumo_medio'].replace([r'.*medio\n0,00\nlitros.*', r'.*medio\nlitros.*'], np.nan, regex=True)
-    df['consumo_medio'] = df['consumo_medio'].str.extract(r'medio\n(.*?)\nlitros')[0]
+    df['consumo_medio'] = df['consumo_medio'].replace([r'.*Consumo medio\r\n0,00\r\nlitros.*', r'.*Consumo medio\r\nlitros.*'], np.nan, regex=True)
+    df['consumo_medio'] = df['consumo_medio'].str.extract(r'Consumo medio\r\n([\d,]+)\r\nlitros')[0]
     df['consumo_medio'] = df['consumo_medio'].str.replace(',', '.').astype(float).round(2)
 
     # precio
@@ -110,6 +115,9 @@ def limpiar_csv(ruta_archivo_csv):
     df["combustible"] = df["combustible"].replace("Diesel", "Diésel")
     df["combustible"] = df["combustible"].replace("Gasolina y corriente eléctrica", "Híbrido")
     df["combustible"] = df["combustible"].replace("Corriente eléctrica", "Eléctrico")
+    df["combustible"] = df["combustible"].replace("Gas", "Gasolina")
+    df["combustible"] = df["combustible"].replace("Gasolina/gas", "Gasolina")
+    df["combustible"] = df["combustible"].replace("Diesel y corriente eléctrica", "Híbrido")
 
     #rename de localizacion a provincia y creacion de columna comunidad 
     df.rename(columns={"localizacion": "provincia"}, inplace=True)
