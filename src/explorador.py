@@ -73,10 +73,8 @@ def explorador_app():
 
     st.plotly_chart(fig_anio_matricula)
 
-    # Subplot de dos gráficos box: "distintivo_ambiental" y "combustible" relacionados con "precio"
     fig = go.Figure()
 
-    # Gráfico para "distintivo_ambiental"
     fig.add_trace(go.Box(
         x=df_filtrado['distintivo_ambiental'],
         y=df_filtrado['precio'],
@@ -85,7 +83,6 @@ def explorador_app():
         marker_color='lightblue'
     ))
 
-    # Gráfico para "combustible"
     fig.add_trace(go.Box(
         x=df_filtrado['combustible'],
         y=df_filtrado['precio'],
@@ -104,14 +101,12 @@ def explorador_app():
 
     st.plotly_chart(fig)
 
-    # Crear subplots
     fig = sp.make_subplots(
-        rows=1, cols=2,  # 1 fila, 2 columnas
+        rows=1, cols=2,  
         subplot_titles=("Kilometraje vs Precio", "Potencia vs Precio"),
         vertical_spacing=0.1
     )
 
-    # Gráfico de dispersión para "kilometraje"
     fig.add_trace(go.Scatter(
         x=df_filtrado['kilometraje'],
         y=df_filtrado['precio'],
@@ -120,7 +115,6 @@ def explorador_app():
         marker=dict(color='lightblue', size=6)
     ), row=1, col=1)
 
-    # Gráfico de dispersión para "potencia"
     fig.add_trace(go.Scatter(
         x=df_filtrado['potencia'],
         y=df_filtrado['precio'],
@@ -131,13 +125,43 @@ def explorador_app():
 
     fig.update_layout(
         title="Relación entre Kilometraje, Potencia y Precio",
-        width=900,  # Ancho total
-        height=500,  # Altura total
+        width=900,  
+        height=500,  
         showlegend=True
     )
 
     st.plotly_chart(fig)
 
+    fig = sp.make_subplots(
+        rows=1, cols=2,  
+        subplot_titles=("Consumo Medio por Marca", "Consumo Medio por Combustible"),
+        vertical_spacing=0.1
+    )
+
+    fig.add_trace(go.Box(
+        y=df_filtrado['consumo_medio'],
+        x=df_filtrado['marca_sola'],
+        name='Consumo Medio por Marca',
+        boxmean='sd',  
+        marker=dict(color='lightblue')
+    ), row=1, col=1)
+
+    fig.add_trace(go.Box(
+        y=df_filtrado['consumo_medio'],
+        x=df_filtrado['combustible'],
+        name='Consumo Medio por Combustible',
+        boxmean='sd', 
+        marker=dict(color='lightgreen')
+    ), row=1, col=2)
+
+    fig.update_layout(
+        title="Distribución del Consumo Medio por Marca y Combustible",
+        width=900,  
+        height=500,  
+        showlegend=False
+    )
+
+    st.plotly_chart(fig)
 
 if __name__ == "__main__":
     explorador_app()
