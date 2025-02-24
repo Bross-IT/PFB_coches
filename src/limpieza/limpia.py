@@ -81,10 +81,20 @@ def limpiar_csv(ruta_archivo_csv):
     # puertas
     df["puertas"] = pd.to_numeric(df["puertas"].str.replace(" Puertas", ""), errors='coerce')
  
-    # consumo_medio
-    df['consumo_medio'] = df['consumo_medio'].replace([r'.*Consumo medio\r\n0,00\r\nlitros.*', r'.*Consumo medio\r\nlitros.*'], np.nan, regex=True)
-    df['consumo_medio'] = df['consumo_medio'].str.extract(r'Consumo medio\r\n([\d,]+)\r\nlitros')[0]
-    df['consumo_medio'] = df['consumo_medio'].str.replace(',', '.').astype(float).round(2)
+    # Reemplazo de valores no válidos
+    df["consumo_medio"] = df["consumo_medio"].replace(
+        [r".*Consumo medio\n0,00\nlitros.*", r".*Consumo medio\nlitros.*"],
+        np.nan,
+        regex=True
+    )
+
+    # Extracción del número con distintos tipos de saltos de línea
+    df["consumo_medio"] = df["consumo_medio"].str.extract(r"Consumo medio\n([\d,]+)\nlitros")[0]
+
+    # Conversión a float
+    df["consumo_medio"] = df["consumo_medio"].str.replace(",", ".").astype(float).round(2)
+
+
 
     # precio
     df['precio'] = df['precio'].str.replace('.', '').str.replace(' €', '')
