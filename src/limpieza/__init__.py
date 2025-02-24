@@ -1,1 +1,1 @@
-from src.limpieza import limpia
+from limpieza import limpia
