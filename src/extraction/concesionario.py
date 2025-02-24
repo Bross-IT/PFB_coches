@@ -1,4 +1,4 @@
-from seleniumScraper import SeleniumScraper
+from src.extraction.seleniumScraper import SeleniumScraper
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
@@ -10,6 +10,9 @@ import os
 import time
 import pathlib
 
+def contiene(lista: list[str], cadena: str) -> str:
+    return next((elemento for elemento in lista if str.lower(cadena) in str.lower(elemento)), '')
+
 dict_concesionario: dict[str, np.array] = {
     "nombre": np.array([]),
     "calle": np.array([]),
@@ -17,9 +20,6 @@ dict_concesionario: dict[str, np.array] = {
     "provincia": np.array([]),
     "codigo_postal": np.array([]),
 }
-
-def contiene(lista: list[str], cadena: str) -> str:
-    return next((elemento for elemento in lista if str.lower(cadena) in str.lower(elemento)), '')
 
 try:
     script_dir = pathlib.Path(__file__).resolve().parent
