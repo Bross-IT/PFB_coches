@@ -69,7 +69,7 @@ def limpiar_csv(ruta_archivo_csv):
     # carrocería
     df["carroceria"] = df["carroceria"].replace("Berlina mediana o grande", "Berlina")
     df["carroceria"] = df["carroceria"].replace("Targa", "Berlina")
-    df["carroceria"] = df["carroceria"].replace("Coupe", "Deportivo o coupé ")
+    df["carroceria"] = df["carroceria"].replace("Coupe", "Deportivo o coupé")
     df["carroceria"] = df["carroceria"].replace("Convertible", "Descapotable o convertible")
     df["carroceria"] = df["carroceria"].replace("Roadster", "Descapotable o convertible")
     df["carroceria"] = df["carroceria"].replace("-", "Pequeño")
