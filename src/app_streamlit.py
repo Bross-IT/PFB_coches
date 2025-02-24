@@ -38,8 +38,8 @@ def main():
         
         mapa_opcion = st.selectbox(
             label="Selecciona el nivel de geografía para visualizar el mapa",
-            #options=["Comunidad", "Provincia"],
-            options=["Comunidad", "Provincia", "Municipio"],
+            options=["Comunidad", "Provincia"],
+            #options=["Comunidad", "Provincia", "Municipio"],
             index=0  
         )
 
@@ -54,7 +54,7 @@ def main():
             with open(mapa_html_provincia, "r", encoding="utf-8") as file:
                 mapa_provincia_html = file.read()
             st.components.v1.html(mapa_provincia_html, height=1024, width=1180)
-
+        # Para mapa cloropetico municipio (Dmytry)
         elif mapa_opcion == "Municipio":
             geojson_url_municipios = f'{script_dir}/geojson/municipios_espana.geojson'
 
@@ -99,9 +99,6 @@ def main():
                 hovertemplate="<b>Municipio</b>: %{customdata[0]}<br><b>Cantidad de Autos</b>: %{customdata[1]}<br><b>Precio medio de Coches en el Municipio</b>: €%{customdata[2]}"
             )
             st.plotly_chart(fig)
-
-
-
 
     elif choice == "Explorador de coches":
         explorador.explorador_app()
