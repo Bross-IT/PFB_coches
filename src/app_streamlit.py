@@ -3,6 +3,8 @@ import plotly.express as px
 import numpy as np
 import pandas as pd
 import pathlib
+import json
+import os
 import streamlit.components.v1 as components
 
 import explorador
@@ -32,11 +34,11 @@ def main():
         
         st.write("""Para cotizar tu coche, dirígete a la sección `Cotiza tu coche` del menú lateral.""")
 
-        
-        df = pd.read_csv(f"{script_dir}/../data/coches_segunda_mano-19-02-2025_limpio.csv")
+        df = pd.read_csv(f'{script_dir}\..\data\municipios_cloropetico.csv')
         
         mapa_opcion = st.selectbox(
             label="Selecciona el nivel de geografía para visualizar el mapa",
+            #options=["Comunidad", "Provincia"],
             options=["Comunidad", "Provincia", "Municipio"],
             index=0  
         )
@@ -54,18 +56,55 @@ def main():
             st.components.v1.html(mapa_provincia_html, height=1024, width=1180)
 
         elif mapa_opcion == "Municipio":
-            mapa_html_municipio = f"{script_dir}/../img/mapa_municipios.html"
-            with open(mapa_html_municipio, "r", encoding="utf-8") as file:
-                mapa_municipio_html = file.read()
-            st.components.v1.html(mapa_municipio_html, height=1024, width=1180)
+            geojson_url_municipios = f'{script_dir}/geojson/municipios_espana.geojson'
 
+            with open(geojson_url_municipios, encoding='utf-8') as f:
+                geojson_data_municipios = json.load(f)
+
+            municipios_geojson = pd.DataFrame([{
+                'municipio': feature['properties']['NAMEUNIT'], 
+                'geometry': feature['geometry'] 
+            } for feature in geojson_data_municipios['features']])
+
+            df_municipios_coches = municipios_geojson.merge(
+                df[['municipio', 'cantidad_coches', 'precio_medio']], 
+                on='municipio', how='left'
+            )
+
+            df_municipios_coches['cantidad_coches'] = df_municipios_coches['cantidad_coches'].fillna(0).astype(int)
+            df_municipios_coches['precio_medio'] = df_municipios_coches['precio_medio'].fillna(0).astype(int)
+            st.write(municipios_geojson.head())
+            st.write(df[['municipio', 'cantidad_coches', 'precio_medio']].head())
+            st.write(geojson_data_municipios['features'][0]['properties'].keys())
+            fig = px.choropleth_mapbox(
+                df_municipios_coches,
+                geojson=geojson_url_municipios,               
+                locations='municipio',                  
+                featureidkey="properties.NAMEUNIT",    
+                color='cantidad_coches',                
+                color_continuous_scale="reds",          
+                mapbox_style="carto-positron",          
+                center={"lat": 40.4, "lon": -3.7},  
+                zoom=5,                          
+                title="Densidad de Coches en Venta y Precio Medio por Municipio",
+                hover_data={'municipio': False, 'cantidad_coches': False, 'precio_medio': False},  
+                custom_data=['municipio', 'cantidad_coches', 'precio_medio'],  
+            )
+            fig.update_layout(
+                width=1180,  
+                height=1024,  
+                autosize=False,
+                coloraxis_colorbar_title="Cantidad de Coches")  
+            fig.update_traces(
+                hovertemplate="<b>Municipio</b>: %{customdata[0]}<br><b>Cantidad de Autos</b>: %{customdata[1]}<br><b>Precio medio de Coches en el Municipio</b>: €%{customdata[2]}"
+            )
+            st.plotly_chart(fig)
 
 
 
 
     elif choice == "Explorador de coches":
         explorador.explorador_app()
-        st.write("**Sitio en construcción**.")
     elif choice == "Comparador de coches":
         #ml_app()
         st.write("**Sitio en construcción**.")

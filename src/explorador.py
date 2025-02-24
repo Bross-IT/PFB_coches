@@ -112,7 +112,9 @@ def explorador_app():
         y=df_filtrado['precio'],
         mode='markers',
         name='Kilometraje',
-        marker=dict(color='lightblue', size=6)
+        marker=dict(color='lightblue', size=6),
+        hovertext=df_filtrado.apply(lambda row: f"Marca: {row['marca_sola']}<br>Modelo: {row['modelo_titulo']}<br>Precio: {row['precio']}", axis=1),
+        hoverinfo='text'
     ), row=1, col=1)
 
     fig.add_trace(go.Scatter(
@@ -120,7 +122,9 @@ def explorador_app():
         y=df_filtrado['precio'],
         mode='markers',
         name='Potencia',
-        marker=dict(color='lightgreen', size=6)
+        marker=dict(color='lightgreen', size=6),
+        hovertext=df_filtrado.apply(lambda row: f"Marca: {row['marca_sola']}<br>Modelo: {row['modelo_titulo']}<br>Precio: {row['precio']}", axis=1),
+        hoverinfo='text'
     ), row=1, col=2)
 
     fig.update_layout(
