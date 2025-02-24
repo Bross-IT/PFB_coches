@@ -5,9 +5,9 @@ import pandas as pd
 import pathlib
 import streamlit.components.v1 as components
 
-from src import explorador
+import explorador
 
-from src.ml_func import PAGE_CONFIG
+from ml_func import PAGE_CONFIG
 
 def main():
     script_dir = pathlib.Path(__file__).resolve().parent
@@ -33,7 +33,7 @@ def main():
         st.write("""Para cotizar tu coche, dirígete a la sección `Cotiza tu coche` del menú lateral.""")
 
         
-        df = pd.read_csv(f"{script_dir}\data\coches_segunda_mano-19-02-2025_limpio.csv")
+        df = pd.read_csv(f"{script_dir}/../data/coches_segunda_mano-19-02-2025_limpio.csv")
         
         mapa_opcion = st.selectbox(
             label="Selecciona el nivel de geografía para visualizar el mapa",
@@ -42,19 +42,19 @@ def main():
         )
 
         if mapa_opcion == "Comunidad":
-            mapa_html_comunidad = f"{script_dir}\img\mapa_comunidades.html"
+            mapa_html_comunidad = f"{script_dir}/../img/mapa_comunidades.html"
             with open(mapa_html_comunidad, "r", encoding="utf-8") as file:
                 mapa_comunidad_html = file.read()
             st.components.v1.html(mapa_comunidad_html, height=1024, width=1180)
 
         elif mapa_opcion == "Provincia":
-            mapa_html_provincia = f"{script_dir}\img\mapa_provincias.html"
+            mapa_html_provincia = f"{script_dir}/../img/mapa_provincias.html"
             with open(mapa_html_provincia, "r", encoding="utf-8") as file:
                 mapa_provincia_html = file.read()
             st.components.v1.html(mapa_provincia_html, height=1024, width=1180)
 
         elif mapa_opcion == "Municipio":
-            mapa_html_municipio = f"{script_dir}\img\mapa_municipios.html"
+            mapa_html_municipio = f"{script_dir}/../img/mapa_municipios.html"
             with open(mapa_html_municipio, "r", encoding="utf-8") as file:
                 mapa_municipio_html = file.read()
             st.components.v1.html(mapa_municipio_html, height=1024, width=1180)
