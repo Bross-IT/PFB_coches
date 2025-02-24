@@ -90,8 +90,6 @@ def limpiar_csv(ruta_archivo_csv):
     df["consumo_medio"] = df["consumo_medio"].str.extract(r"Consumo medio\n([\d,]+)\nlitros")[0]
     df["consumo_medio"] = df["consumo_medio"].str.replace(",", ".").astype(float).round(2)
 
-
-
     # precio
     df['precio'] = df['precio'].str.replace('.', '').str.replace(' €', '')
     df['precio'] = df['precio'].str.split('\n').str[0]
