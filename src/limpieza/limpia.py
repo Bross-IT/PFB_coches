@@ -46,6 +46,7 @@ def limpiar_csv(ruta_archivo_csv):
     # tipo_vendedor
     df['vendedor']=df['vendedor'].fillna("-") # llenar nan con "-"
     df["nombre_vendedor_profesional"] = pd.Series(dtype="string")
+    df['nombre_vendedor_profesional'] = df['nombre_vendedor_profesional'].str.replace('\r', '', regex=False) #quitar \r
     mask = df['vendedor'].str.endswith('\nProfesional')
     df.loc[mask, 'nombre_vendedor_profesional'] = df.loc[mask, 'vendedor'].str.split('\nProfesional').str[0]
     df['vendedor'] = df['vendedor'].apply(lambda x: True if '\nProfesional' in x else False)
