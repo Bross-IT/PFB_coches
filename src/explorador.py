@@ -103,27 +103,32 @@ def explorador_app():
 
     fig = sp.make_subplots(
         rows=1, cols=2,  
-        subplot_titles=("Kilometraje vs Precio", "Potencia vs Precio"),
+        subplot_titles=("Kilometraje vs Precio en escala logarítmica", "Potencia vs Precio en escala logarítmica"),
         vertical_spacing=0.1
     )
 
+    df_scatter = df_filtrado.copy()
+    df_scatter['precio'] = df_scatter['precio'].replace(0,np.nan)
+    df_scatter['kilometraje'] = df_scatter['kilometraje'].replace(0,np.nan)
+    df_scatter['potencia'] = df_scatter['potencia'].replace(0,np.nan)
+
     fig.add_trace(go.Scatter(
-        x=df_filtrado['kilometraje'],
-        y=df_filtrado['precio'],
+        x=np.log(df_scatter['kilometraje']), 
+        y=np.log(df_scatter['precio']),
         mode='markers',
         name='Kilometraje',
         marker=dict(color='lightblue', size=6),
-        hovertext=df_filtrado.apply(lambda row: f"Marca: {row['marca_sola']}<br>Modelo: {row['modelo_titulo']}<br>Precio: {row['precio']}", axis=1),
+        hovertext=df_scatter.apply(lambda row: f"Marca: {row['marca_sola']}<br>Modelo: {row['modelo_titulo']}<br>Precio: {row['precio']}<br>Kilometraje: {row['kilometraje']}", axis=1),
         hoverinfo='text'
     ), row=1, col=1)
 
     fig.add_trace(go.Scatter(
-        x=df_filtrado['potencia'],
-        y=df_filtrado['precio'],
+        x=np.log(df_scatter['potencia']),
+        y=np.log(df_scatter['precio']),
         mode='markers',
         name='Potencia',
         marker=dict(color='lightgreen', size=6),
-        hovertext=df_filtrado.apply(lambda row: f"Marca: {row['marca_sola']}<br>Modelo: {row['modelo_titulo']}<br>Precio: {row['precio']}", axis=1),
+        hovertext=df_scatter.apply(lambda row: f"Marca: {row['marca_sola']}<br>Modelo: {row['modelo_titulo']}<br>Precio: {row['precio']}<br>Potencia: {row['potencia']}", axis=1),
         hoverinfo='text'
     ), row=1, col=2)
 
