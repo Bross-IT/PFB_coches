@@ -5,6 +5,8 @@ import pandas as pd
 import pathlib
 import streamlit.components.v1 as components
 
+from src import explorador
+
 from src.ml_func import PAGE_CONFIG
 
 def main():
@@ -62,7 +64,7 @@ def main():
 
 
     elif choice == "Explorador de coches":
-        #eda_app()
+        explorador.explorador_app()
         st.write("**Sitio en construcción**.")
     elif choice == "Comparador de coches":
         #ml_app()
