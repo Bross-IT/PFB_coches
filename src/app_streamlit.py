@@ -16,7 +16,7 @@ def main():
 
     st.set_page_config(**PAGE_CONFIG)
 
-    menu = ["Home", "Explorador de coches","Comparador de coches", "Cotiza tu coche"]
+    menu = ["Home", "Exploratory Data Analysis","Comparador de coches", "Cotiza tu coche", "Base de datos", "About us"]
 
     choice = st.sidebar.selectbox(label = "Menu", options = menu, index = 0)
 
@@ -25,14 +25,24 @@ def main():
 
         st.write("**Bienvenidos a la mejor web para encontrar tu coche de segunda mano hecha con Streamlit**.")
 
-        st.markdown("""Toda la información recopilada en este proyecto proviene de la siguiente web de coches: 
-                       [Autocasión](https://www.autocasion.com/coches-segunda-mano).""")
+        st.markdown("""Para este proyecto, desarrollaremos una aplicación web con Streamlit que permita navegar y visualizar de manera 
+                    cómoda y sencilla los datos más relevantes en el mercado de coches de segunda mano, utilizando la web de 
+                    [Autocasión](https://www.autocasion.com/coches-segunda-mano) como fuente principal de datos.
+                     Crearemos una base de datos para almacenar eficientemente la información extraída y diseñaremos un proceso ETL 
+                    para mantenerla actualizada.""")
 
-        st.write("""Para entender bien los datos con los que se construyó nuestra calculadora de precios, dirígete a la sección `Explorador de coches` del menú lateral.""")
+        st.write("""Para entender bien los datos con los que se construyó nuestra calculadora de precios, dirígete a la sección 
+                 `Exploratory Data Analysis` del menú lateral.""")
 
-        st.write("""Si estas buscando tu próximo coche y no te decides por cual, puedes usar nuestro `Comparador de coches` dirigiendote al menú lateral.""")
+        st.write("""Si estas buscando tu próximo coche y no te decides por cual, puedes usar nuestro `Comparador de coches` 
+                 dirigiendote al menú lateral.""")
         
         st.write("""Para cotizar tu coche, dirígete a la sección `Cotiza tu coche` del menú lateral.""")
+
+        st.write("""Para conocer la estructura de nuestra base de datos, dirígete a la sección `Base de Datos` del menú lateral,
+                  en la cual compartiremos los aspectos más relevantes de cada una de sus tablas.""")
+        
+        st.write("""Conoce más sobre nuestro equipo en la sección, `About us` del menú lateral y descubre todos nuestros proyectos.""")
 
         df = pd.read_csv(f'{script_dir}\..\data\municipios_cloropetico.csv')
         
@@ -100,11 +110,17 @@ def main():
             )
             st.plotly_chart(fig)
 
-    elif choice == "Explorador de coches":
+    elif choice == "Exploratory Data Analysis":
         explorador.explorador_app()
     elif choice == "Comparador de coches":
+        #comparador_app()
+        st.write("**Sitio en construcción**.")
+    elif choice == "Cotiza tu coche":
         #ml_app()
         st.write("**Sitio en construcción**.")
+    elif choice == "Base de datos":
+        #BBDD_app()
+        st.write("**Sitio en construcción**.")        
     else:
         #about_app()
         st.write("**Sitio en construcción**.")
