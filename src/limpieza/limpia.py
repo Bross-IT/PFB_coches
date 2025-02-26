@@ -82,14 +82,12 @@ def limpiar_csv(ruta_archivo_csv):
     df["puertas"] = pd.to_numeric(df["puertas"].str.replace(" Puertas", ""), errors='coerce')
  
     # Consumo medio
-    df["consumo_medio"] = df["consumo_medio"].replace(
-        [r".*Consumo medio\\n0,00\\nlitros.*", r".*Consumo medio\\nlitros.*"],
-        np.nan,
-        regex=True
-    )
-    regex_pattern = r"([\d,]+,[\d]+)"
-    df["consumo_medio"] = df["consumo_medio"].str.extract(regex_pattern)
+    sin_valor_en_regex = r".*Consumo medio\\nlitros.*"
+    df["consumo_medio"] = df["consumo_medio"].replace(sin_valor_en_regex, np.nan, regex=True)
+    digitos_en_regex = r"([\d,]+,[\d]+)"
+    df["consumo_medio"] = df["consumo_medio"].str.extract(digitos_en_regex)
     df["consumo_medio"] = df["consumo_medio"].str.replace(",", ".").astype(float).round(2)
+    df[df["consumo_medio"] == 0] = np.nan
 
     # precio
     df['precio'] = df['precio'].str.replace('.', '').str.replace(' €', '')
