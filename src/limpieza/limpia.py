@@ -186,3 +186,23 @@ def limpiar_csv(ruta_archivo_csv):
     df.to_csv(ruta_archivo_limpio, index=False)
 
     return df
+
+def limpiar_csv_conces(ruta_csv_conces):
+        """
+    Limpia los datos de concesionarios en bruto extraídos de la web autocasion y guarda un csv con el df resultante.
+    
+    Parameters:
+    ruta_csv_conces: ruta del archivo generado por función scraper
+    
+    Returns:
+    pd.DataFrame: el df limpio
+    """
+    df_conces = pd.read_csv(ruta_csv_conces)
+    df_conces["codigo_postal"] = pd.to_numeric(df_conces["codigo_postal"], errors='coerce')
+    df_conces.loc[(df_conces["codigo_postal"] < 1000) | (df_conces["codigo_postal"] > 52999) | (df_conces["codigo_postal"].isna()), "codigo_postal"] = 0
+    # Como es solo para consulta, si sale el código postal como 00000, se entiende que no hay.
+
+    ruta_archivo_limpio = ruta_csv_conces.replace(".csv", "_limpio.csv")
+    df.to_csv(ruta_archivo_limpio, index=False)
+
+    return df_conces
