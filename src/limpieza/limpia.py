@@ -44,14 +44,15 @@ def limpiar_csv(ruta_archivo_csv):
     df['referencia'] = pd.to_numeric(df['referencia'].str.replace('ref', ''), errors='coerce')
 
     # tipo_vendedor
-    df['vendedor']=df['vendedor'].fillna("-") # llenar nan con "-"
-    df["nombre_vendedor_profesional"] = pd.Series(dtype="string")
-    df['nombre_vendedor_profesional'] = df['nombre_vendedor_profesional'].str.replace('\r', '', regex=False) #quitar \r
-    mask = df['vendedor'].str.endswith('\nProfesional')
-    df.loc[mask, 'nombre_vendedor_profesional'] = df.loc[mask, 'vendedor'].str.split('\nProfesional').str[0]
-    df['vendedor'] = df['vendedor'].apply(lambda x: True if '\nProfesional' in x else False)
-    df.rename(columns={'vendedor':'vendedor_profesional'}, inplace=True)
-    df['vendedor_profesional'].astype(bool)
+    df["vendedor"] = df["vendedor"].fillna("-")  # llenar nan con "-"
+    df["nombre_vendedor"] = pd.Series(dtype="string")
+    mask_profesional = df["vendedor"].str.endswith("\nProfesional")
+    mask_particular = df["vendedor"].str.contains("\nParticular")
+    df.loc[mask_profesional, "nombre_vendedor"] = df.loc[mask_profesional, "vendedor"].str.split("\nProfesional").str[0]
+    df.loc[mask_particular, "nombre_vendedor"] = df.loc[mask_particular, "vendedor"].str.split("\nParticular").str[0]
+    df["vendedor"] = df["vendedor"].apply(lambda x: True if "\nProfesional" in x else False)
+    df.rename(columns={"vendedor": "vendedor_profesional"}, inplace=True)
+    df["vendedor_profesional"] = df["vendedor_profesional"].astype(bool)
 
     # color
     df['color']=df['color'].apply(lambda x: x.upper())
@@ -134,7 +135,7 @@ def limpiar_csv(ruta_archivo_csv):
     "Asturias": "Asturias",
     "Ávila": "Castilla y León",
     "Badajoz": "Extremadura",
-    "Baleares": "Islas Baleares",
+    "Islas Baleares": "Islas Baleares",
     "Barcelona": "Cataluña",
     "Burgos": "Castilla y León",
     "Cáceres": "Extremadura",
@@ -160,11 +161,11 @@ def limpiar_csv(ruta_archivo_csv):
     "Málaga": "Andalucía",
     "Murcia": "Región de Murcia",
     "Navarra": "Navarra",
-    "Ourense": "Galicia",
+    "Orense": "Galicia",
     "Palencia": "Castilla y León",
     "Pontevedra": "Galicia",
     "Salamanca": "Castilla y León",
-    "Santa Cruz de Tenerife": "Canarias",
+    "Tenerife": "Canarias",
     "Segovia": "Castilla y León",
     "Sevilla": "Andalucía",
     "Soria": "Castilla y León",
