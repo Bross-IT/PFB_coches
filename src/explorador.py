@@ -22,7 +22,7 @@ def explorador_app():
     st.sidebar.markdown("*" * 10)
     st.sidebar.markdown("Selecciona `Año`, `Marca` y `Tipo de Coche` para explorar los datos.")
 
-    df = pd.read_csv(f"{script_dir}/../data/coches_segunda_mano-19-02-2025_limpio.csv")
+    df = pd.read_csv(f"{script_dir}/../data/coches_consolidado_limpio.csv")
     q1 = df['precio'].quantile(0.25)
     q3 = df['precio'].quantile(0.75)
     ric = q3 - q1
@@ -335,20 +335,20 @@ def explorador_app():
         st.write(f"En este gráfico se muestra la distribución del consumo medio según marca, tipo de coche y combustible de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
         st.write(observacion_boxplot)
 
-    concesionarios = pd.read_csv(f"{script_dir}/../data/concesionarios.csv")
+    concesionarios = pd.read_csv(f"{script_dir}/../data/concesionarios_limpio.csv")
     concesionarios["municipio"] = concesionarios["municipio"].str.replace("Municipio: ", "", regex=True)
-    concesionarios["codigo_postal"] = concesionarios["codigo_postal"].str.extract(r"(\d+)") 
+    
     concesionarios['nombre'] = concesionarios['nombre'].apply(lambda x: x.upper())
-    concesionarios = concesionarios.rename(columns={'nombre': 'nombre_vendedor_profesional'})
-    concesionarios = concesionarios[["nombre_vendedor_profesional", "municipio", "codigo_postal"]]
+    concesionarios = concesionarios.rename(columns={'nombre': 'nombre_vendedor'})
+    concesionarios = concesionarios[["nombre_vendedor", "municipio", "codigo_postal"]]
 
     df_municipios = df_sin_outliers.copy()
-    df_municipios['nombre_vendedor_profesional'] = df_municipios['nombre_vendedor_profesional'].fillna('').apply(lambda x: x.replace('\r', ''))
-    df_unido = pd.merge(df_municipios, concesionarios, on='nombre_vendedor_profesional', how='left')
+    df_municipios['nombre_vendedor'] = df_municipios['nombre_vendedor'].fillna('').apply(lambda x: x.replace('\r', ''))
+    df_unido = pd.merge(df_municipios, concesionarios, on='nombre_vendedor', how='left')
 
     fig = sp.make_subplots(
         rows=3, cols=1,  
-        subplot_titles=("Distribución de Precio por Comunidad", "Distribución de Precio por Provincia", "Distribución de Precio por Código Postal"),
+        subplot_titles=("Distribución de Precio por Comunidad", "Distribución de Precio por Provincia", "Distribución de Precio por Municipio"),
         vertical_spacing=0.25
     )
 
