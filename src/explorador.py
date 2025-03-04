@@ -153,7 +153,7 @@ def explorador_app():
         marcas_txt = "de todas las marcas" if "Todos" in marcas_seleccionadas else f"marca {', '.join(marcas_seleccionadas)}"
         tipos_txt = "todos los tipos" if "Todos" in tipos_seleccionados else f"tipo {', '.join(tipos_seleccionados)}"
     
-        st.write(f"En este gráfico Boxplot se muestra la distribución de precios de los coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")
+        st.write(f"En este Boxplot se muestra la distribución de precios de los coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")
         st.write(observacion_boxplot)
 
     #Gráfico distribución de precios según distintivo ambiental y tipo de combustible
@@ -189,7 +189,7 @@ def explorador_app():
     if not marcas_seleccionadas or not tipos_seleccionados:
             st.write('Introduzca tipo de coche y una marca para visualizar la distribución del precio según distintivo ambiental y tipo de combustible.')
     else:
-        st.write(f"En este gráfico se muestra la distribución de precios según distintivo ambiental y combustible de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
+        st.write(f"En este Boxplot se muestra la distribución de precios según distintivo ambiental y combustible de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
         st.write(observacion_boxplot)
 
     #Subplots de distribución de precios segun distintos variables
@@ -244,7 +244,7 @@ def explorador_app():
     if not marcas_seleccionadas or not tipos_seleccionados:
             st.write('Introduzca tipo de coche y una marca para visualizar la distribución del precio según variables.')
     else:
-        st.write(f"En estos gráficos se muestra la distribución de precios según distintas variables de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
+        st.write(f"En este caso, podemos ver la distribución de precios según distintas variables de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
         st.write(observacion_boxplot)
 
     #Subplots de relación entre Kilometraje, Potencia y Precio (escala logarítmica)
@@ -294,7 +294,7 @@ def explorador_app():
     else:
         st.write(f"En estos gráficos de dispersión se muestra la distribución de precios de los coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]} en relación al kilometraje y la potencia.")
         st.write("En el gráfico de precios por kilometraje se puede observar que en general, a medida que aumenta el kilometraje, el precio disminuye.")
-        st.write("En el gráfico de precios por potencia, la relacion es positiva, lo que indica que los coches con potencia más alta tienden a tener precios más altos.")
+        st.write("En el de precios por potencia, la relacion es positiva, lo que indica que los coches con potencia más alta tienden a tener precios más altos.")
 
     #Subplots de distribución de precios según Comunidad, Provincia y Municipio
 
@@ -332,7 +332,7 @@ def explorador_app():
     if not marcas_seleccionadas or not tipos_seleccionados:
             st.write('Introduzca tipo de coche y una marca para visualizar la distribución del consumo medio según marca, tipo de coche ycombustible.')
     else:
-        st.write(f"En este gráfico se muestra la distribución del consumo medio según marca, tipo de coche y combustible de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
+        st.write(f"Aquí podemos apreciar la distribución del consumo medio según marca, tipo de coche y combustible de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
         st.write(observacion_boxplot)
 
     concesionarios = pd.read_csv(f"{script_dir}/../data/concesionarios_limpio.csv")
@@ -387,7 +387,7 @@ def explorador_app():
     if not marcas_seleccionadas or not tipos_seleccionados:
             st.write('Introduzca tipo de coche y una marca para visualizar la distribución del precio según Comunidad, Provincia y Municipio.')
     else:
-        st.write(f"En estos gráficos se muestra la distribución de precios según Comunidad, Provincia y Municipio de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
+        st.write(f"A partir destros tres gráficos, podemos notar la distribución de precios según Comunidad, Provincia y Municipio de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
         st.write(observacion_boxplot)
          
 
