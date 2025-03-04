@@ -809,7 +809,7 @@ def tratamiento_nans(ruta_csv_consolidado):
     df['distintivo_ambiental'] = df.apply(lambda row: tratamiento_distintivo_ambiental(row, df), axis=1)
 
     # guardar df limpio en nuevo csv
-    ruta_archivo_limpio = ruta_csv_consolidado.replace(".csv", "_limpio.csv")
+    ruta_archivo_limpio = ruta_csv_consolidado.replace("_limpio.csv", "_limpio_nonans.csv")
     df.to_csv(ruta_archivo_limpio, index=False)
 
     return df
