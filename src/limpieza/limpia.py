@@ -26,8 +26,8 @@ def limpiar_csv(ruta_archivo_csv):
 
     # fecha de matriculación
     df[['mes_matricula', 'anio_matricula']] = df['anio'].str.split('/', expand=True)
-    df['mes_matricula'] = df['mes_matricula'].astype(int)
-    df['anio_matricula'] = df['anio_matricula'].astype(int)
+    df['mes_matricula'] = pd.to_numeric(df['mes_matricula'], errors='coerce').fillna(0).astype(int)
+    df['anio_matricula'] = pd.to_numeric(df['anio_matricula'], errors='coerce').fillna(0).astype(int)
     df.drop(columns=["anio"], inplace=True)
 
     # kilometraje
@@ -114,7 +114,7 @@ def limpiar_csv(ruta_archivo_csv):
 
     # cambio
     df.rename(columns={'cambio': 'cambio_automatico'}, inplace=True)
-    df['cambio_automatico'] = df['cambio_automatico'].apply(lambda x: True if x == 'Automático' else False)
+    df['cambio_automatico'] = df['cambio_automatico'] == 'Automático'
 
     # combustible
     df["combustible"] = df["combustible"].replace("Diesel", "Diésel")
@@ -651,3 +651,165 @@ def limpiar_csv_conces(ruta_csv_conces):
         df_conces.to_csv(ruta_archivo_limpio, index=False)
 
         return df_conces
+
+def tratamiento_nans(ruta_csv_consolidado):
+      
+    df = pd.read_csv(ruta_csv_consolidado)
+
+    def tratamiento_combustible(row, df):
+        if pd.notna(row['combustible']):  
+            return row['combustible']
+
+        modelo_upper = row['modelo_titulo'].upper()
+
+        if any(x in modelo_upper for x in ['HÍBRIDO ENCHUFABLE', 'HIBRIDO ENCHUFABLE', 'PHEV', 'E-HYBRID', 'PLUG-IN HYBRID', 'P-HEV']):
+            return 'Híbrido Enchufable'
+        
+        if any(x in modelo_upper for x in ['ELÉCTRICO', 'ELECTRICO']):
+            return 'Eléctrico'
+        
+        if any(x in modelo_upper for x in ['HÍBRIDO', 'HYBRID', 'HIBRIDO']):
+            return 'Híbrido'
+        
+        if any(x in modelo_upper for x in ['DIÉSEL', 'DIESEL']):
+            return 'Diésel'
+        
+        if any(x in modelo_upper for x in ['GASOLINA', 'TSI', 'TFSI', 'MPI', 'FSI']):
+            return 'Gasolina'
+        # Selecciono el primer elemento de modelo titulo (generalmente el modelo) y si es igual y no tiene nan en combustible, elijo el combustible mmoda
+        primera_palabra = row['modelo_titulo'].split()[0] 
+        similares = df[df['modelo_titulo'].str.contains(primera_palabra, case=False, na=False)]
+
+        if not similares['combustible'].dropna().empty:
+            return similares['combustible'].mode()[0] if not similares['combustible'].mode().empty else None
+        
+        return None 
+
+    df['combustible'] = df.apply(lambda row: tratamiento_combustible(row, df), axis=1)
+
+    def tratamiento_potencia(df):
+        df['potencia'] = df['potencia'].fillna(df.groupby(['marca_sola', 'carroceria'])['potencia'].transform('mean'))
+        df['potencia'] =df['potencia'].apply(lambda x: round(x,2))
+        return df
+
+        #Actualizo valores puntuales sin datos
+    df.loc[df['referencia'] == 14960284, 'potencia'] = 717
+    df.loc[df['referencia'] == 13860766, 'potencia'] = 570
+    df.loc[df['referencia'] == 14288267, 'potencia'] = 163
+    df.loc[df['referencia'] == 14436440, 'potencia'] = 211
+    df.loc[df['referencia'] == 15403075, 'potencia'] = 707
+    df.loc[df['referencia'] == 15497025, 'potencia'] = 163
+    df.loc[df['referencia'] == 15487722, 'potencia'] = 163
+    df.loc[df['referencia'] == 11748727, 'potencia'] = 401
+    df = tratamiento_potencia(df)
+
+    def segmentar_potencia(potencia):
+        if potencia < 70:
+            return '<70'
+        elif 70 <= potencia < 110:
+            return '70-110'
+        elif 110 <= potencia < 150:
+            return '110-150'
+        elif 150 <= potencia < 200:
+            return '150-200'
+        elif 200 <= potencia < 300:
+            return '200-300'
+        elif 300 <= potencia < 450:
+            return '300-450'
+        elif potencia >= 450:
+            return '>450'
+    df['potencia_segmentado'] = df['potencia'].apply(segmentar_potencia)
+
+    def tratamiento_consumo(df):
+    
+        df.loc[(df['combustible'] == 'Eléctrico'), 'consumo_medio'] = 0
+
+        df_consumo_agg = df[df['combustible']!= 'Eléctrico'].groupby(['potencia_segmentado']).agg({'consumo_medio':'mean'})
+        dict_consumo = df_consumo_agg.to_dict() 
+
+        df['consumo_medio'] = df.apply(lambda row: dict_consumo['consumo_medio'].get(row['potencia_segmentado'], row['consumo_medio']) 
+        if pd.isna(row['consumo_medio']) else row['consumo_medio'], axis=1)
+
+        return df
+        
+    df = tratamiento_consumo(df)
+
+    def tratamiento_plazas(df):
+        df.loc[df['carroceria'] == '4x4, SUV o pickup', 'plazas'] = df['plazas'].fillna(5)
+        df.loc[df['carroceria'] == 'Berlina', 'plazas'] = df['plazas'].fillna(5)
+        df.loc[df['carroceria'] == 'Familiar', 'plazas'] = df['plazas'].fillna(5)
+        df.loc[df['carroceria'] == 'Monovolumen', 'plazas'] = df['plazas'].fillna(7)
+        df.loc[df['puertas'].isin([2, 3]), 'plazas'] = df['plazas'].fillna(2) 
+        df.loc[df['puertas'].isin([4, 5]), 'plazas'] = df['plazas'].fillna(5) 
+
+        return df
+
+    df = tratamiento_plazas(df)
+
+    def tratamiento_carroceria(row, df):
+        if pd.notna(row['carroceria']):  
+            return row['carroceria']
+
+        modelo_titulo = str(row['modelo_titulo']).upper()  
+
+        if any(word in modelo_titulo for word in ['SUV', '4X4', 'PICKUP']):
+            return '4x4, SUV o pickup'
+
+        if any(word in modelo_titulo for word in ['ALLROAD', 'TODO TERRENO']):
+            return 'Todo Terreno'
+
+        if any(word in modelo_titulo for word in ['COUPÉ', 'DEPORTIVO']):
+            return 'Deportivo o coupé'
+        
+        if 'BERLINA' in modelo_titulo:
+            return 'Berlina'
+        
+        if 'FAMILIAR' in modelo_titulo:
+            return 'Familiar'
+
+        if any(word in modelo_titulo for word in ['DESCAPOTABLE', 'CONVERTIBLE']):
+            return 'Descapotable o Convertible'
+        
+        if 'MONOVOLUME' in modelo_titulo:
+            return 'Monovolumen'
+        
+        if 'PEQUEÑO' in modelo_titulo:
+            return 'Pequeño'
+
+        primera_palabra = modelo_titulo.split()[0]  
+        similares = df[df['modelo_titulo'].str.contains(primera_palabra, case=False, na=False)]
+
+        if not similares['carroceria'].dropna().empty:
+            return similares['carroceria'].mode()[0] if not similares['carroceria'].mode().empty else None  
+
+        return None  
+    
+    df['carroceria'] = df.apply(lambda row: tratamiento_carroceria(row, df), axis=1)
+
+    def tratamiento_distintivo_ambiental(row, df):
+        if pd.notna(row['distintivo_ambiental']):  
+            return row['distintivo_ambiental']
+        
+        combustible = str(row['combustible']).upper() if pd.notna(row['combustible']) else None  
+
+        if combustible is None:
+            return None  
+
+        if 'ELÉCTRICO' in combustible:
+            return '0 EMISIONES'
+        if 'HÍBRIDO' in combustible:
+            return 'ECO'
+        if 'DIÉSEL' in combustible:
+            return 'B'
+        if 'GASOLINA' in combustible:
+            return 'C'
+
+        return None  
+
+    df['distintivo_ambiental'] = df.apply(lambda row: tratamiento_distintivo_ambiental(row, df), axis=1)
+
+    # guardar df limpio en nuevo csv
+    ruta_archivo_limpio = ruta_csv_consolidado.replace(".csv", "_limpio.csv")
+    df.to_csv(ruta_archivo_limpio, index=False)
+
+    return df
