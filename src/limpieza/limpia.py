@@ -97,6 +97,7 @@ def limpiar_csv(ruta_archivo_csv):
 
     # potencia
     df['potencia'] = df['potencia'].str.replace(' cv', '')
+    df['potencia'] = df['potencia'].str.replace('.', '')
     df['potencia'] = pd.to_numeric(df['potencia'], errors='coerce')
 
     # crear campo peninsula_baleares
