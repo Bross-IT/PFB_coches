@@ -2,9 +2,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 
 from urllib.parse import urlparse, parse_qs
-
+import pathlib
 import requests
 
 import numpy as np
@@ -58,12 +59,14 @@ class SeleniumScraper:
         return int(parametros.get("page", [1])[0]) 
     
     def get_features_cars(self) -> np.array:
+        script_dir = pathlib.Path(__file__).resolve().parent
+
         marca: str = self.driver.find_element(by = By.TAG_NAME, value = "h1").text
         spans = self.driver.find_element(by=By.XPATH, value="//div[@class='etiquetas']").find_elements(by = By.TAG_NAME, value = "span")
         
         localizacion: str = [ spans[-1].text if spans[-1].text != "" else spans[-2].text ][0]
         if localizacion == "":
-            with open("../data/localizacion_errors.txt", "w") as file:
+            with open(f"{script_dir}/../../data/localizacion_errors.txt", "w") as file:
                 file.write(str(f"localizacion: {localizacion} , url: {self.driver.current_url}"))
         try:
             distintivo_ambiental: str = self.driver.find_element(by=By.XPATH, value="//div[@class='etiquetas']").find_element(by = By.TAG_NAME, value = "img").get_attribute("alt")
@@ -110,19 +113,21 @@ class SeleniumScraper:
         except NoSuchElementException as nse:
             color: str = ''
         try:
-            precio: str = self.driver.find_elements(by=By.XPATH, value="//ul[@class='tabla-precio']//li")[0].text.split(":")[1].strip()
+            precio: str = self.get_text(by=By.XPATH, value="//ul[@class='tabla-precio']//li").split(":")[1].strip()
         except IndexError as ie:
-            precio: str = ''
-            print(ie)
+            precio: str = self.get_text(By.CLASS_NAME, "precio").strip()
+            print(f"IndexError: {ie}")
             print(self.driver.current_url)
         #marca: str = self.driver.find_elements(by=By.XPATH, value="//input[@id='brand-name']")[0].get_attribute("value")
         #modelo: str = self.driver.find_elements(by=By.XPATH, value="//input[@id='family-name']")[0].get_attribute("value")
 
         tab_spec_2 = self.find_element(By.XPATH, '//li[@class="tab-spec-2"]')
         if tab_spec_2 is not None:
-            self.driver.execute_script("arguments[0].scrollIntoView();", tab_spec_2)
+            time.sleep(random.uniform(0.5, 2))
+            ActionChains(self.driver).move_to_element(tab_spec_2).perform()
+            #self.driver.execute_script("arguments[0].scrollIntoView();", tab_spec_2)
             tab_spec_2.click()
-            time.sleep(1)
+            
         consumo_medio: str = self.get_text(by = By.XPATH, value = '//ul[contains(@class,"tab-spec-2")]/li').strip()
 
         try:
@@ -141,11 +146,13 @@ class SeleniumScraper:
 
         try:
             url_imagen: str = self.get_attribute(by=By.XPATH, value="//img[contains(normalize-space(@class), 'type-image')]", attribute = "src")
-            response_img = requests.get(url_imagen)
             if url_imagen != '':
-                ruta_imagen: str = f"../img/coches/{url_imagen.split('/')[-1].split("?")[0]}"
+                response_img = requests.get(url_imagen)
+                ruta_imagen: str = f"{script_dir}/../../img/coches/{url_imagen.split('/')[-1].split("?")[0]}"
                 with open(ruta_imagen, "wb") as file:
                     file.write(response_img.content)
+            else:
+                ruta_imagen = ''
         except NoSuchElementException as nse:
             ruta_imagen = ''
             print(f"No se encontro imagen para {self.driver.current_url} \n {nse}")

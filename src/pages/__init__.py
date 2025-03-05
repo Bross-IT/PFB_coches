@@ -1,1 +1,0 @@
-from src.pages import comparador

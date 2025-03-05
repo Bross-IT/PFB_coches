@@ -1,4 +1,4 @@
-from src.extraction.seleniumScraper import SeleniumScraper
+from seleniumScraper import SeleniumScraper
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
@@ -11,7 +11,8 @@ import time
 import pathlib
 
 def contiene(lista: list[str], cadena: str) -> str:
-    return next((elemento for elemento in lista if str.lower(cadena) in str.lower(elemento)), '')
+    elemento = next((elemento for elemento in lista if str.lower(cadena) in str.lower(elemento)), '')
+    return elemento.split(':')[1].strip() if elemento != '' else elemento
 
 dict_concesionario: dict[str, np.array] = {
     "nombre": np.array([]),

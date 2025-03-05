@@ -1,0 +1,55 @@
+26-02-2025 - https://www.autocasion.com/coches-segunda-mano/kia-xceed-ocasion/xceed-1-0-t-gdi-eco-dynamics-drive-ref15187472 
+ [Errno 2] No such file or directory: '../img/coches/15187472-0-390651564167a3f5029425e9.43440268.jpeg'26-02-2025 - https://www.autocasion.com/coches-segunda-mano/audi-q3-ocasion/q3-35-tdi-advanced-s-tronic-110kw-ref15481497 
+ Message: element click intercepted: Element <li class="tab-spec-2">...</li> is not clickable at point (371, 22). Other element would receive the click: <span>...</span>
+  (Session info: chrome=133.0.6943.128)
+Stacktrace:
+	GetHandleVerifier [0x00007FF78473C6A5+28789]
+	(No symbol) [0x00007FF7846A5B20]
+	(No symbol) [0x00007FF784538F9A]
+	(No symbol) [0x00007FF7845971E9]
+	(No symbol) [0x00007FF784594BA2]
+	(No symbol) [0x00007FF784591C51]
+	(No symbol) [0x00007FF784590B51]
+	(No symbol) [0x00007FF7845826C6]
+	(No symbol) [0x00007FF7845B732A]
+	(No symbol) [0x00007FF784581BC6]
+	(No symbol) [0x00007FF7845B7540]
+	(No symbol) [0x00007FF7845DF7E3]
+	(No symbol) [0x00007FF7845B7103]
+	(No symbol) [0x00007FF78457FFC0]
+	(No symbol) [0x00007FF784581273]
+	GetHandleVerifier [0x00007FF784A81AED+3458237]
+	GetHandleVerifier [0x00007FF784A9829C+3550316]
+	GetHandleVerifier [0x00007FF784A8DB9D+3507565]
+	GetHandleVerifier [0x00007FF784802C6A+841274]
+	(No symbol) [0x00007FF7846B09EF]
+	(No symbol) [0x00007FF7846ACB34]
+	(No symbol) [0x00007FF7846ACCD6]
+	(No symbol) [0x00007FF78469C119]
+	BaseThreadInitThunk [0x00007FFA22EFE8D7+23]
+	RtlUserThreadStart [0x00007FFA23F3BF2C+44]
+26-02-2025 - https://www.autocasion.com/coches-segunda-mano/mercedes-benz-clase-sl-ocasion/sl-500-edition-1-16706d13988a08-ref15413982 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?27-02-2025 - https://www.autocasion.com/coches-segunda-mano/renault-scenic-ocasion/1-9-dci-120-cv-confort-dynamique-16235f34d81c97-ref6614633 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?27-02-2025 - https://www.autocasion.com/coches-km0/km-0/mg-zs-km0/1-5-luxury-166cea882d8435-ref14178393 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?27-02-2025 - https://www.autocasion.com/coches-segunda-mano/mercedes-benz-clase-glc-ocasion/glc-200-d-4matic-coup-167b928f5c2ff3-ref15473305 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?27-02-2025 - https://www.autocasion.com/coches-segunda-mano/toyota-yaris-ocasion/1-5-120h-active-plus-167c0a1440b744-ref15504248 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?28-02-2025 - https://www.autocasion.com/coches-km0/km-0/skoda-karoq-km0/selection-advanced-1-0-tsi-85kw-115-cv-nu7dc531-167c06f67e3984-ref15500177 
+ HTTPSConnectionPool(host='images0.autocasion.com', port=443): Max retries exceeded with url: /unsafe/820x/ad/0225/27/15500177/15500177-0-317495550067c079ff3b63f6.64161442.jpeg (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x00000171BED10AA0>: Failed to resolve 'images0.autocasion.com' ([Errno 11001] getaddrinfo failed)"))28-02-2025 - https://www.autocasion.com/coches-segunda-mano/audi-a3-ocasion/a3-sportback-2-0tdi-attraction-q-s-t-184-ref15156431 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?28-02-2025|None| - https://www.autocasion.com/coches-segunda-mano/nissan-micra-ocasion/ig-t-68-kw-92-cv-e6d-f-acenta-167c19e56ba135-ref15506946 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?
+28-02-2025|None| - https://www.autocasion.com/coches-km0/km-0/toyota-proace-verso-km0/l1-2pl-family-advance-75kwh-136-cv-e-toggle-167a75d09786f5-ref15453453 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?
+01-03-2025|None| - https://www.autocasion.com/coches-segunda-mano/fiat-500-ocasion/1-0-hybrid-51kw-70-cv-dolcevita-167c22cb13bd31-ref15510148 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?
+01-03-2025|None| - https://www.autocasion.com/coches-segunda-mano/opel-corsa-ocasion/1-2t-xhl-74kw-100cv-gs-167c1d8528956d-ref15508622 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?
+01-03-2025|None| - https://www.autocasion.com/coches-segunda-mano/opel-corsa-ocasion/1-2t-xhl-74kw-100cv-gs-167c1d8528956d-ref15508622 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?
+04-03-2025|None| - https://www.autocasion.com/coches-segunda-mano/toyota-corolla-ocasion/5-puertas-active-plus-140h-e-cvt-167c1e01349c3c-ref15509143 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?
+04-03-2025|None| - https://www.autocasion.com/coches-km0/km-0/citroen-c4-km0/elctrico-115kw-54kwh-plus-1678fed3ec2dd1-ref15279289 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?
+04-03-2025|None| - https://www.autocasion.com/coches-segunda-mano/mercedes-benz-viano-ocasion/viano-2-2cdi-avantgarde-larga-aut-ref15522036 
+ Invalid URL '': No scheme supplied. Perhaps you meant https://?
+04-03-2025|None| - https://www.autocasion.com/coches-segunda-mano/jeep-gladiator-ocasion/gladiator-3-0-crd-overland-1-ref15522651 
+ cannot access local variable 'ruta_imagen' where it is not associated with a value
