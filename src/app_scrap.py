@@ -16,7 +16,7 @@ import random
 script_dir = pathlib.Path(__file__).resolve().parent
 
 # Sustituir por obtener ref de BBDD
-df = pd.read_csv(f"{script_dir}/../data/coches_segunda_mano-04-03-2025.csv")
+df = pd.read_csv(f"{script_dir}/../data/coches_consolidado_limpio.csv")
 referencias_guardadas: list[str] = df["referencia"].tolist()
 
 try:

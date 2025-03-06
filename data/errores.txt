@@ -53,3 +53,5 @@ Stacktrace:
  Invalid URL '': No scheme supplied. Perhaps you meant https://?
 04-03-2025|None| - https://www.autocasion.com/coches-segunda-mano/jeep-gladiator-ocasion/gladiator-3-0-crd-overland-1-ref15522651 
  cannot access local variable 'ruta_imagen' where it is not associated with a value
+06-03-2025|None| - https://www.autocasion.com/coches-ocasion?direction=desc&page=625&sort=updated_at 
+ 'NoneType' object has no attribute 'click'
