@@ -48,8 +48,8 @@ def main():
         
         mapa_opcion = st.selectbox(
             label="Selecciona el nivel de geografía para visualizar el mapa",
-            options=["Comunidad", "Provincia"],
-            #options=["Comunidad", "Provincia", "Municipio"],
+            #options=["Comunidad", "Provincia"],
+            options=["Comunidad", "Provincia", "Municipio"],
             index=0  
         )
 
@@ -67,10 +67,11 @@ def main():
         # Para mapa cloropetico municipio (Dmytry)
         elif mapa_opcion == "Municipio":
             geojson_url_municipios = f'{script_dir}/geojson/municipios_espana.geojson'
+            print(geojson_url_municipios)
 
             with open(geojson_url_municipios, encoding='utf-8') as f:
                 geojson_data_municipios = json.load(f)
-
+        
             municipios_geojson = pd.DataFrame([{
                 'municipio': feature['properties']['NAMEUNIT'], 
                 'geometry': feature['geometry'] 
@@ -83,10 +84,8 @@ def main():
 
             df_municipios_coches['cantidad_coches'] = df_municipios_coches['cantidad_coches'].fillna(0).astype(int)
             df_municipios_coches['precio_medio'] = df_municipios_coches['precio_medio'].fillna(0).astype(int)
-            st.write(municipios_geojson.head())
-            st.write(df[['municipio', 'cantidad_coches', 'precio_medio']].head())
-            st.write(geojson_data_municipios['features'][0]['properties'].keys())
-            fig = px.choropleth_mapbox(
+            
+            fig = px.choropleth_map(
                 df_municipios_coches,
                 geojson=geojson_url_municipios,               
                 locations='municipio',                  
