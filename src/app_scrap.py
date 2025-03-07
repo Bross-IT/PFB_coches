@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 from urllib.parse import urlparse, parse_qs
 import os
 import pathlib
@@ -12,12 +13,12 @@ import time
 import datetime
 import random
 
-#https://www.autocasion.com/coches-ocasion?direction=desc&sort=updated_at&page=1
 script_dir = pathlib.Path(__file__).resolve().parent
 
 # Sustituir por obtener ref de BBDD
 df = pd.read_csv(f"{script_dir}/../data/coches_consolidado_limpio.csv")
-referencias_guardadas: list[str] = df["referencia"].tolist()
+fecha_max = df["fecha_extraccion"].str[:10].max()
+referencias_guardadas: list[str] = df[df["fecha_extraccion"].str[:10] == fecha_max]["referencia"].tolist()
 
 try:
     selenium_scraper = SeleniumScraper()
@@ -64,7 +65,9 @@ try:
         df_pag.to_csv(ruta_archivo, mode= "w" if primer_guardado else "a", header= primer_guardado, index = False)
         
         time.sleep(random.randint(10, 25))
-        selenium_scraper.find_element(by = By.XPATH, value = "//a[@class='last']").click()
+        next_pag: WebElement = selenium_scraper.find_element(by = By.XPATH, value = "//a[@class='last']")
+        if next_pag:
+            next_pag.click()
 except Exception as e:
     with open(f"{script_dir}/../data/errores.txt", "a") as file:
         file.write(str(f"{datetime.datetime.now().strftime("%d-%m-%Y")}|{selenium_scraper.find_element(by = By.XPATH, value = "//a[@class='last']")}| - {selenium_scraper.current_url()} \n {e}\n"))
