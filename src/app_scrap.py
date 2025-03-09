@@ -16,13 +16,13 @@ import random
 script_dir = pathlib.Path(__file__).resolve().parent
 
 # Sustituir por obtener ref de BBDD
-df = pd.read_csv(f"{script_dir}/../data/coches_consolidado_limpio.csv")
+df = pd.read_csv(f"{script_dir}/../data/coches_segunda_mano-09-03-2025.csv")
 fecha_max = df["fecha_extraccion"].str[:10].max()
 referencias_guardadas: list[str] = df[df["fecha_extraccion"].str[:10] == fecha_max]["referencia"].tolist()
 
 try:
     selenium_scraper = SeleniumScraper()
-    selenium_scraper.open_url("https://www.autocasion.com/coches-ocasion?direction=desc&page=1&sort=updated_at")
+    selenium_scraper.open_url("https://www.autocasion.com/coches-ocasion?direction=desc&page=478&sort=updated_at")
     selenium_scraper.find_element(by = By.CSS_SELECTOR, value = "#didomi-notice-disagree-button").click()
 
     nombre_caracteristicas: list[str] = ["marca", "anio", "localizacion", "kilometraje", "combustible", "distintivo_ambiental", "garantia", "cambio", "carroceria", "plazas",

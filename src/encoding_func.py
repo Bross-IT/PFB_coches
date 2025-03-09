@@ -7,7 +7,7 @@ import category_encoders as ce
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
-from limpieza import limpia
+from src.limpieza import limpia
 import pathlib
 
 

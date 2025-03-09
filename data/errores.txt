@@ -55,3 +55,5 @@ Stacktrace:
  cannot access local variable 'ruta_imagen' where it is not associated with a value
 06-03-2025|None| - https://www.autocasion.com/coches-ocasion?direction=desc&page=625&sort=updated_at 
  'NoneType' object has no attribute 'click'
+08-03-2025|None| - https://www.autocasion.com/coches-segunda-mano/volkswagen-touareg-ocasion/touareg-3-0tdi-v6-premium-tiptronic-4motion-170kw-ref15218679 
+ HTTPConnectionPool(host='localhost', port=56206): Read timed out. (read timeout=120)
