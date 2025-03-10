@@ -26,7 +26,7 @@ df_modelo: pd.DataFrame = df[['kilometraje', 'cambio_automatico', 'potencia', 'm
 with open(f"{CURRENT_DIR}/../../bin/cambio_automatico_encoder.pickle", "rb") as file:
     cambio_automatico_encoder: OneHotEncoder = pickle.load(file)
 
-cambio_automatico_transformed = cambio_automatico_encoder.transform(df_modelo[["cambio_automatico"]]).astype(bool)
+cambio_automatico_transformed = cambio_automatico_encoder.transform(df_modelo[["cambio_automatico"]]).astype(int)
 df_modelo.loc[:, "cambio_automatico"] = cambio_automatico_transformed
 
 with open(f"{CURRENT_DIR}/../../bin/dataframe_ml.pickle", "wb") as file:
