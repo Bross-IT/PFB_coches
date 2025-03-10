@@ -3,5 +3,7 @@ from src import limpieza
 from src import ml_func
 from src import comparador
 from src import explorador
+from src import bd_page
+from src import cotiza_tu_coche
 from src import encoding_func
 from src import ocasionDataBase
