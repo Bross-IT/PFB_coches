@@ -13,7 +13,7 @@ def show():
 
     equipo = [
         {"nombre": "🧠 Ambrosio Barceló", "imagen": f"{script_dir}/../img/ambrosio_barcelo.jpg", "descripcion": "Espíritu procesador de datos y mente adaptada a la programación desde los once años de edad. Con amplio background tecnológico en el campo informático y audiovisual, busco ayudar a empresas a solucionar problemas del mundo real a través de la ciencia de datos."},
-        {"nombre": "📊 Santiago Tomás Courel", "imagen": f"{script_dir}/../img/santiago_courel_.JPG", "descripcion": "Graduado en Máster en Dirección Financiera con sólida experiencia en planificación y análisis financiero. Actualmente integrando Data Science para potenciar la toma de decisiones estratégicas y optimizar procesos clave. Apasionado por los retos que impulsan la innovación y la transformación digital, busco contribuir con mi experiencia y visión estratégica a proyectos dinámicos que generen impacto y valor."},
+        {"nombre": "📊 Santiago Tomás Courel", "imagen": f"{script_dir}/../img/santiago_courel.jpg", "descripcion": "Graduado en Máster en Dirección Financiera con sólida experiencia en planificación y análisis financiero. Actualmente integrando Data Science para potenciar la toma de decisiones estratégicas y optimizar procesos clave. Apasionado por los retos que impulsan la innovación y la transformación digital, busco contribuir con mi experiencia y visión estratégica a proyectos dinámicos que generen impacto y valor."},
         {"nombre": "💾 Jonathan Ordóñez", "imagen": f"{script_dir}/../img/jonathan_ordonez.jpg", "descripcion": ""},
     ]
 
