@@ -24,28 +24,27 @@ def main():
 
         st.subheader("**Bienvenidos a la mejor web para encontrar tu coche de segunda mano hecha con Streamlit**.")
 
-        st.markdown("""Para este proyecto, desarrollaremos una aplicación web con Streamlit que permita navegar y visualizar de manera 
+        st.markdown("""Para este proyecto, desarrollamos una aplicación web con Streamlit que permita navegar y visualizar de manera 
                     cómoda y sencilla los datos más relevantes en el mercado de coches de segunda mano, utilizando la web de 
                     [Autocasión](https://www.autocasion.com/coches-segunda-mano) como fuente principal de datos.
-                     Crearemos una base de datos para almacenar eficientemente la información extraída y diseñaremos un proceso ETL 
-                    para mantenerla actualizada.""")
+                     Creamos una base de datos para almacenar eficientemente la información extraída y diseñamos un proceso ETL 
+                    para mantenerla actualizada. 
+                     Además, implementamos modelos de Machine Learning y Deep Learning para predecir el precio de coches según las 
+                    características ingresadas por el usuario, permitiéndole obtener una estimación precisa basada en datos históricos
+                    del mercado. 🚗📊✨""")
         
-        st.subheader("**Secciones:**.")
+        st.subheader("**Secciones:**")
 
-        st.write("""Para entender bien los datos con los que se construyó nuestra calculadora de precios, dirígete a la sección 
-                 `Exploratory Data Analysis` del menú lateral.""")
+        st.markdown("""
+                    - **Para entender bien los datos** con los que se construyó nuestra calculadora de precios, dirígete a la sección `Exploratory Data Analysis` del menú lateral.  
+                    - **Si estás buscando tu próximo coche** y no te decides por cuál, puedes usar nuestro `Comparador de coches` dirigiéndote al menú lateral.  
+                    - **Para cotizar tu coche**, dirígete a la sección `Cotiza tu coche` del menú lateral.  
+                    - **Para conocer la estructura de nuestra base de datos**, dirígete a la sección `Base de Datos` del menú lateral, en la cual compartiremos los aspectos más relevantes de cada una de sus tablas.  
+                    - **Conoce más sobre nuestro equipo** en la sección `About us` del menú lateral y descubre todos nuestros proyectos.  
+                                
+                    """)
 
-        st.write("""Si estas buscando tu próximo coche y no te decides por cual, puedes usar nuestro `Comparador de coches` 
-                 dirigiendote al menú lateral.""")
-        
-        st.write("""Para cotizar tu coche, dirígete a la sección `Cotiza tu coche` del menú lateral.""")
-
-        st.write("""Para conocer la estructura de nuestra base de datos, dirígete a la sección `Base de Datos` del menú lateral,
-                  en la cual compartiremos los aspectos más relevantes de cada una de sus tablas.""")
-        
-        st.write("""Conoce más sobre nuestro equipo en la sección, `About us` del menú lateral y descubre todos nuestros proyectos.""")
-
-        df = pd.read_csv(f'{script_dir}/../data/municipios_cloropetico.csv')
+        df = pd.read_csv(f'{script_dir}/../data/municipios_coropletico.csv')
 
         mapa_opcion = st.selectbox(
             label="Selecciona el nivel de geografía para visualizar el mapa",
