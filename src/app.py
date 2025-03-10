@@ -24,7 +24,7 @@ def main():
 
         st.subheader("**Bienvenidos a la mejor web para encontrar tu coche de segunda mano hecha con Streamlit**.")
 
-        st.markdown("""Para este proyecto, desarrollamos una aplicación web con Streamlit que permita navegar y visualizar de manera 
+        st.markdown("""Para este proyecto, desarrollamos una aplicación web con Streamlit que permite navegar y visualizar de manera 
                     cómoda y sencilla los datos más relevantes en el mercado de coches de segunda mano, utilizando la web de 
                     [Autocasión](https://www.autocasion.com/coches-segunda-mano) como fuente principal de datos.
                      Creamos una base de datos para almacenar eficientemente la información extraída y diseñamos un proceso ETL 
