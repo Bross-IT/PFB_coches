@@ -3,7 +3,3 @@ showErrorDetails = "none"
 
 [server]
 port = 8501
-
-[theme]
-primaryColor = "#F63366"
-backgroundColor = "black"
