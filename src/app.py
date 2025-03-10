@@ -20,15 +20,17 @@ def main():
     choice = st.sidebar.selectbox(label = "Menu", options = menu, index = 0)
 
     if choice == "Home":
-        st.subheader(body = "Home :house:")
+        st.title(body = "Home :house:")
 
-        st.write("**Bienvenidos a la mejor web para encontrar tu coche de segunda mano hecha con Streamlit**.")
+        st.subheader("**Bienvenidos a la mejor web para encontrar tu coche de segunda mano hecha con Streamlit**.")
 
         st.markdown("""Para este proyecto, desarrollaremos una aplicación web con Streamlit que permita navegar y visualizar de manera 
                     cómoda y sencilla los datos más relevantes en el mercado de coches de segunda mano, utilizando la web de 
                     [Autocasión](https://www.autocasion.com/coches-segunda-mano) como fuente principal de datos.
                      Crearemos una base de datos para almacenar eficientemente la información extraída y diseñaremos un proceso ETL 
                     para mantenerla actualizada.""")
+        
+        st.subheader("**Secciones:**.")
 
         st.write("""Para entender bien los datos con los que se construyó nuestra calculadora de precios, dirígete a la sección 
                  `Exploratory Data Analysis` del menú lateral.""")
