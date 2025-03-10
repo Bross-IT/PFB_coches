@@ -6,23 +6,27 @@ import pandas as pd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from urllib.parse import urlparse, parse_qs
-import os
+
 import pathlib
+from pathlib import Path
 
 import time
 import datetime
 import random
 
-script_dir = pathlib.Path(__file__).resolve().parent
+CURRENT_DIR = pathlib.Path(__file__).resolve().parent
+DAILY_CARS_PATH = Path(f"{CURRENT_DIR}/../data/coches_segunda_mano-{datetime.datetime.now().strftime('%d-%m-%Y')}.csv")
 
-# Sustituir por obtener ref de BBDD
-df = pd.read_csv(f"{script_dir}/../data/coches_segunda_mano-09-03-2025.csv")
-fecha_max = df["fecha_extraccion"].str[:10].max()
-referencias_guardadas: list[str] = df[df["fecha_extraccion"].str[:10] == fecha_max]["referencia"].tolist()
+referencias_guardadas: list[str] = []
+primer_guardado: bool = True
+if DAILY_CARS_PATH.exists():
+    primer_guardado = False	
+    df = pd.read_csv(DAILY_CARS_PATH)
+    referencias_guardadas = df["referencia"].tolist()
 
 try:
     selenium_scraper = SeleniumScraper()
-    selenium_scraper.open_url("https://www.autocasion.com/coches-ocasion?direction=desc&page=478&sort=updated_at")
+    selenium_scraper.open_url("https://www.autocasion.com/coches-ocasion?direction=desc&page=1&sort=updated_at")
     selenium_scraper.find_element(by = By.CSS_SELECTOR, value = "#didomi-notice-disagree-button").click()
 
     nombre_caracteristicas: list[str] = ["marca", "anio", "localizacion", "kilometraje", "combustible", "distintivo_ambiental", "garantia", "cambio", "carroceria", "plazas",
@@ -34,9 +38,9 @@ try:
     while actual_pag != total_pags:
         selenium_scraper.script_scroll(100)
         actual_pag = int(selenium_scraper.get_current_page(selenium_scraper.current_url()))
-        with open(f"{script_dir}/../data/last-page-coches.txt", "w") as file:
+        with open(f"{CURRENT_DIR}/../data/last-page-coches.txt", "w") as file:
             file.write(str(f"{actual_pag}\n{selenium_scraper.current_url()}"))
-        print("actual page ... " + str(actual_pag))
+        print(f"actual page ... {actual_pag} - datos extraidos: {total_extraidos}")
         articles = selenium_scraper.find_elements(by = By.XPATH, value = "//article[contains(@class, 'anuncio')]")
         time.sleep(3)
 
@@ -56,20 +60,16 @@ try:
             time.sleep(3)
         
         df_pag: pd.DataFrame = pd.DataFrame(data_coches, columns = nombre_caracteristicas)
-
         total_extraidos += len(df_pag)
         data_coches.clear()
+        df_pag.to_csv(DAILY_CARS_PATH, mode= "w" if primer_guardado else "a", header= primer_guardado, index = False)
 
-        ruta_archivo: str = f"{script_dir}/../data/coches_segunda_mano-{datetime.datetime.now().strftime("%d-%m-%Y")}.csv"
-        primer_guardado: bool = not os.path.exists(ruta_archivo)
-        df_pag.to_csv(ruta_archivo, mode= "w" if primer_guardado else "a", header= primer_guardado, index = False)
-        
         time.sleep(random.randint(10, 25))
         next_pag: WebElement = selenium_scraper.find_element(by = By.XPATH, value = "//a[@class='last']")
         if next_pag:
             next_pag.click()
 except Exception as e:
-    with open(f"{script_dir}/../data/errores.txt", "a") as file:
+    with open(f"{CURRENT_DIR}/../data/errores.txt", "a") as file:
         file.write(str(f"{datetime.datetime.now().strftime("%d-%m-%Y")}|{selenium_scraper.find_element(by = By.XPATH, value = "//a[@class='last']")}| - {selenium_scraper.current_url()} \n {e}\n"))
     print(f"exception: {e}")
 

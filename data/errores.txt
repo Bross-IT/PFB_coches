@@ -57,3 +57,5 @@ Stacktrace:
  'NoneType' object has no attribute 'click'
 08-03-2025|None| - https://www.autocasion.com/coches-segunda-mano/volkswagen-touareg-ocasion/touareg-3-0tdi-v6-premium-tiptronic-4motion-170kw-ref15218679 
  HTTPConnectionPool(host='localhost', port=56206): Read timed out. (read timeout=120)
+10-03-2025|<selenium.webdriver.remote.webelement.WebElement (session="d6984819315f9437383acb46dbd4e045", element="f.011719DAF29370E7E265030759F62884.d.D16A5BA85D6AD3557AB30321BAD22F9F.e.2629469")>| - https://www.autocasion.com/coches-ocasion?direction=desc&page=567&sort=updated_at 
+ HTTPConnectionPool(host='localhost', port=58007): Read timed out. (read timeout=120)
