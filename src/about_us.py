@@ -41,7 +41,7 @@ def show():
             
             st.markdown(
                 f"""
-                <p style='text-align: left;'>
+                <p style="display: flex; justify-content: start; align-items: left;">
                     <a href="{miembro['linkedin']}" target="_blank">
                         <img src="https://img.icons8.com/ios-filled/50/0077B5/linkedin.png" width="20">
                     </a>
