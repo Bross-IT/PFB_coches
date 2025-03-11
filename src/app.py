@@ -49,7 +49,7 @@ def main():
                                 
                     """)
 
-        df = pd.read_csv(f'{script_dir}/../data/municipios_cloropetico.csv')
+        #df = pd.read_csv(f'{script_dir}/../data/municipios_cloropetico.csv')
 
         mapa_opcion = st.selectbox(
             label="Selecciona el nivel de geografía para visualizar el mapa",
