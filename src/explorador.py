@@ -74,6 +74,7 @@ def explorador_app():
     heatmap = px.imshow(img = matriz_correl,
                         labels = label_dict,
                         title = "Correlación de las variables de Coches",
+                        color_continuous_scale=[(0, "blue"), (0.5, "white"), (1, "green")],
                         text_auto = True)
     heatmap.update_layout(
     xaxis=dict(tickmode='array', tickvals=list(range(len(matriz_correl.columns))), ticktext=[label_dict[col] for col in matriz_correl.columns]),
@@ -158,31 +159,41 @@ def explorador_app():
 
     #Gráfico distribución de precios según distintivo ambiental y tipo de combustible
     
-    fig = go.Figure()
-
-    fig.add_trace(go.Box(
-        x=df_filtrado['distintivo_ambiental'],
-        y=df_filtrado['precio'],
-        name='Distintivo Ambiental',
-        boxmean='sd',
-        marker_color='lightblue'
-    ))
-
-    fig.add_trace(go.Box(
-        x=df_filtrado['combustible'],
-        y=df_filtrado['precio'],
-        name='Combustible',
-        boxmean='sd',
-        marker_color='lightgreen'
-    ))
-
-    fig.update_layout(
-        title="Distribución de precios por Distintivo Ambiental y Combustible",
-        xaxis_title="Categorías",
-        yaxis_title="Precio en Euros",
-        width=900, 
-        height=500
+    fig = sp.make_subplots(
+    rows=1, cols=2,  
+    subplot_titles=("Distribución de precios según Distintivo Ambiental", "Distribución de precios según Combustible"),
+    vertical_spacing=0.15
     )
+
+    fig.add_trace(go.Box(
+        y=df_filtrado['precio'],
+        x=df_filtrado['distintivo_ambiental'].astype(str),
+        name='Distribución de precios según Distintivo Ambiental',
+        boxmean='sd',  
+        marker=dict(color='lightblue')
+    ), row=1, col=1)
+
+    fig.add_trace(go.Box(
+        y=df_filtrado['precio'],
+        x=df_filtrado['combustible'],
+        name='Distribución de precios según Combustible',
+        boxmean='sd', 
+        marker=dict(color='lightgreen')
+    ), row=1, col=2)
+
+    
+    fig.update_layout(
+        title="Distribución de Precios según distintas Distintivo Ambiental y Combustible",
+        width=900,  
+        height=500,  
+        showlegend=False
+    )
+
+    fig.update_xaxes(title_text="Distintivo Ambiental", row=1, col=1)
+    fig.update_yaxes(title_text="Precio en Euros", row=1, col=1)
+
+    fig.update_xaxes(title_text="Tipo de Combustible", row=1, col=2)
+    fig.update_yaxes(title_text="Precio en Euros", row=1, col=2)
 
     st.plotly_chart(fig)
 
@@ -197,7 +208,7 @@ def explorador_app():
     fig = sp.make_subplots(
     rows=2, cols=2,  
     subplot_titles=("Distribución de precios según Plazas", "Distribución de precios según Puertas","Distribución de precios según Garantía", "Distribución de precios según Color"),
-    vertical_spacing=0.15
+    vertical_spacing=0.25
     )
 
     fig.add_trace(go.Box(
@@ -238,6 +249,18 @@ def explorador_app():
         height=500,  
         showlegend=False
     )
+
+    fig.update_xaxes(title_text="Número de Plazas", row=1, col=1)
+    fig.update_yaxes(title_text="Precio en Euros", row=1, col=1)
+
+    fig.update_xaxes(title_text="Número de Puertas", row=1, col=2)
+    fig.update_yaxes(title_text="Precio en Euros", row=1, col=2)
+
+    fig.update_xaxes(title_text="Garantía en meses", row=2, col=1)
+    fig.update_yaxes(title_text="Precio en Euros", row=2, col=1)
+
+    fig.update_xaxes(title_text="Color", row=2, col=2)
+    fig.update_yaxes(title_text="Precio en Euros", row=2, col=2)
 
     st.plotly_chart(fig)
 
@@ -286,6 +309,12 @@ def explorador_app():
         height=500,  
         showlegend=True
     )
+
+    fig.update_xaxes(title_text="Kilómetros", row=1, col=1)
+    fig.update_yaxes(title_text="Precio en Euros", row=1, col=1)
+
+    fig.update_xaxes(title_text="Potencia", row=1, col=2)
+    fig.update_yaxes(title_text="Precio en Euros", row=1, col=2)
 
     st.plotly_chart(fig)
 
