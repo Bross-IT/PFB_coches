@@ -138,16 +138,25 @@ def explorador_app():
     else:
         st.write(f"En este gráfico de línea se muestra la evolución del precio medio {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
 
-    #Boxplot de distribución de precios según marca, tipo de coche
+    # Gráfico de distribución de precios por marca y tipo de coche
+    orden_marcas = df_filtrado.groupby("marca_sola")["precio"].mean().sort_values(ascending=False).index.tolist()
 
-    fig = px.box(df_filtrado, x="marca_sola", y="precio", color="carroceria",
-                 title="Distribución de precios por Marca y Tipo de Coche",
-                 labels={"precio": "Precio en Euros", "marca_sola": "Marca", "carroceria": "Tipo de Coche", "modelo_titulo": "Modelo"},
-                 hover_data=["modelo_titulo"])
+    df_filtrado["marca_sola"] = pd.Categorical(df_filtrado["marca_sola"], categories=orden_marcas, ordered=True)
+
+    df_ordenado = df_filtrado.sort_values(by="marca_sola", key=lambda x: x.map({val: i for i, val in enumerate(orden_marcas)}))
+
+    fig = px.box(df_ordenado, 
+                x="marca_sola", 
+                y="precio", 
+                color="carroceria",
+                title="Distribución de precios por Marca y Tipo de Coche",
+                labels={"precio": "Precio en Euros", "marca_sola": "Marca", "carroceria": "Tipo de Coche", "modelo_titulo": "Modelo"},
+                hover_data=["modelo_titulo"])
 
     fig.update_layout(xaxis_tickangle=-45, width=900, height=500)
 
-    st.plotly_chart(fig)
+    st.plotly_chart(fig)    
+
     if not marcas_seleccionadas or not tipos_seleccionados:
         st.write('Introduzca un tipo de coche y una marca para visualizar el gráfico de distribución de precios.')
     else:
@@ -159,31 +168,39 @@ def explorador_app():
 
     #Gráfico distribución de precios según distintivo ambiental y tipo de combustible
     
+    orden_distintivo = df_filtrado.groupby("distintivo_ambiental")["precio"].mean().sort_values(ascending=False).index.tolist()
+    orden_combustible = df_filtrado.groupby("combustible")["precio"].mean().sort_values(ascending=False).index.tolist()
+
+    df_filtrado["distintivo_ambiental"] = pd.Categorical(df_filtrado["distintivo_ambiental"], categories=orden_distintivo, ordered=True)
+    df_filtrado["combustible"] = pd.Categorical(df_filtrado["combustible"], categories=orden_combustible, ordered=True)
+
+    df_ordenado_distintivo = df_filtrado.sort_values(by="distintivo_ambiental", key=lambda x: x.map({val: i for i, val in enumerate(orden_distintivo)}))
+    df_ordenado_combustible = df_filtrado.sort_values(by="combustible", key=lambda x: x.map({val: i for i, val in enumerate(orden_combustible)}))
+
     fig = sp.make_subplots(
-    rows=1, cols=2,  
-    subplot_titles=("Distribución de precios según Distintivo Ambiental", "Distribución de precios según Combustible"),
-    vertical_spacing=0.15
+        rows=1, cols=2,  
+        subplot_titles=("Distribución de precios según Distintivo Ambiental", "Distribución de precios según Combustible"),
+        vertical_spacing=0.15
     )
 
     fig.add_trace(go.Box(
-        y=df_filtrado['precio'],
-        x=df_filtrado['distintivo_ambiental'].astype(str),
+        y=df_ordenado_distintivo['precio'],
+        x=df_ordenado_distintivo['distintivo_ambiental'],
         name='Distribución de precios según Distintivo Ambiental',
         boxmean='sd',  
         marker=dict(color='lightblue')
     ), row=1, col=1)
 
     fig.add_trace(go.Box(
-        y=df_filtrado['precio'],
-        x=df_filtrado['combustible'],
+        y=df_ordenado_combustible['precio'],
+        x=df_ordenado_combustible['combustible'],
         name='Distribución de precios según Combustible',
         boxmean='sd', 
         marker=dict(color='lightgreen')
     ), row=1, col=2)
 
-    
     fig.update_layout(
-        title="Distribución de Precios según distintas Distintivo Ambiental y Combustible",
+        title="Distribución de Precios según Distintivo Ambiental y Combustible",
         width=900,  
         height=500,  
         showlegend=False
@@ -327,6 +344,15 @@ def explorador_app():
 
     #Subplots de distribución de precios según Comunidad, Provincia y Municipio
 
+    orden_marca = df_filtrado.groupby("marca_sola")["consumo_medio"].mean().sort_values(ascending=False).index.tolist()
+    orden_combustible = df_filtrado.groupby("combustible")["consumo_medio"].mean().sort_values(ascending=False).index.tolist()
+
+    df_filtrado["marca_sola"] = pd.Categorical(df_filtrado["marca_sola"], categories=orden_marca, ordered=True)
+    df_filtrado["combustible"] = pd.Categorical(df_filtrado["combustible"], categories=orden_combustible, ordered=True)
+
+    df_ordenado_marca = df_filtrado.sort_values(by="marca_sola", key=lambda x: x.map({val: i for i, val in enumerate(orden_marca)}))
+    df_ordenado_combustible = df_filtrado.sort_values(by="combustible", key=lambda x: x.map({val: i for i, val in enumerate(orden_combustible)}))
+
     fig = sp.make_subplots(
         rows=1, cols=2,  
         subplot_titles=("Consumo Medio por Marca", "Consumo Medio por Combustible"),
@@ -334,16 +360,16 @@ def explorador_app():
     )
 
     fig.add_trace(go.Box(
-        y=df_filtrado['consumo_medio'],
-        x=df_filtrado['marca_sola'],
+        y=df_ordenado_marca['consumo_medio'],
+        x=df_ordenado_marca['marca_sola'],
         name='Consumo Medio por Marca',
         boxmean='sd',  
         marker=dict(color='lightblue')
     ), row=1, col=1)
 
     fig.add_trace(go.Box(
-        y=df_filtrado['consumo_medio'],
-        x=df_filtrado['combustible'],
+        y=df_ordenado_combustible['consumo_medio'],
+        x=df_ordenado_combustible['combustible'],
         name='Consumo Medio por Combustible',
         boxmean='sd', 
         marker=dict(color='lightgreen')
@@ -355,6 +381,12 @@ def explorador_app():
         height=500,  
         showlegend=False
     )
+
+    fig.update_xaxes(title_text="Marca", row=1, col=1)
+    fig.update_yaxes(title_text="Consumo Medio (L/100km)", row=1, col=1)
+
+    fig.update_xaxes(title_text="Tipo de Combustible", row=1, col=2)
+    fig.update_yaxes(title_text="Consumo Medio (L/100km)", row=1, col=2)
 
     st.plotly_chart(fig)
 
@@ -375,44 +407,66 @@ def explorador_app():
     df_municipios['nombre_vendedor'] = df_municipios['nombre_vendedor'].fillna('').apply(lambda x: x.replace('\r', ''))
     df_unido = pd.merge(df_municipios, concesionarios, on='nombre_vendedor', how='left')
 
+    orden_comunidad = df_filtrado.groupby("comunidad")["precio"].mean().sort_values(ascending=False).index.tolist()
+    orden_provincia = df_filtrado.groupby("provincia")["precio"].mean().sort_values(ascending=False).index.tolist()
+    orden_municipio = df_unido.groupby("municipio")["precio"].mean().sort_values(ascending=False).index.tolist()
+
+    df_filtrado["comunidad"] = pd.Categorical(df_filtrado["comunidad"], categories=orden_comunidad, ordered=True)
+    df_filtrado["provincia"] = pd.Categorical(df_filtrado["provincia"], categories=orden_provincia, ordered=True)
+    df_unido["municipio"] = pd.Categorical(df_unido["municipio"], categories=orden_municipio, ordered=True)
+
+    df_ordenado_comunidad = df_filtrado.sort_values(by="comunidad", key=lambda x: x.map({val: i for i, val in enumerate(orden_comunidad)}))
+    df_ordenado_provincia = df_filtrado.sort_values(by="provincia", key=lambda x: x.map({val: i for i, val in enumerate(orden_provincia)}))
+    df_ordenado_municipio = df_unido.sort_values(by="municipio", key=lambda x: x.map({val: i for i, val in enumerate(orden_municipio)}))
+
     fig = sp.make_subplots(
         rows=3, cols=1,  
         subplot_titles=("Distribución de Precio por Comunidad", "Distribución de Precio por Provincia", "Distribución de Precio por Municipio"),
-        vertical_spacing=0.25
+        vertical_spacing=0.3
     )
 
     fig.add_trace(go.Box(
-        y=df_filtrado['precio'],
-        x=df_filtrado['comunidad'],
+        y=df_ordenado_comunidad['precio'],
+        x=df_ordenado_comunidad['comunidad'],
         name='Distribución de Precio por Comunidad',
         boxmean='sd',  
         marker=dict(color='lightblue')
     ), row=1, col=1)
 
     fig.add_trace(go.Box(
-        y=df_filtrado['precio'],
-        x=df_filtrado['provincia'],
+        y=df_ordenado_provincia['precio'],
+        x=df_ordenado_provincia['provincia'],
         name='Distribución de Precio por Provincia',
         boxmean='sd', 
         marker=dict(color='lightgreen')
     ), row=2, col=1)
 
     fig.add_trace(go.Box(
-        y=df_unido['precio'],
-        x=df_unido['municipio'].astype(str),
+        y=df_ordenado_municipio['precio'],
+        x=df_ordenado_municipio['municipio'],
         name='Distribución de Precio por Municipio',
         boxmean='sd', 
         marker=dict(color='lightgreen')
     ), row=3, col=1)
 
     fig.update_layout(
-        title="Distribución Precio por Comunidad, Provincia y municipio.",
+        title="Distribución de Precio por Comunidad, Provincia y Municipio",
         width=900,  
-        height=700,  
+        height=800,  
         showlegend=False
     )
 
-    st.plotly_chart(fig)  
+    fig.update_xaxes(title_text="Comunidad", row=1, col=1)
+    fig.update_yaxes(title_text="Precio en Euros", row=1, col=1)
+
+    fig.update_xaxes(title_text="Provincia", row=2, col=1)
+    fig.update_yaxes(title_text="Precio en Euros", row=2, col=1)
+
+    fig.update_xaxes(title_text="Municipio", row=3, col=1)
+    fig.update_yaxes(title_text="Precio en Euros", row=3, col=1)
+
+    st.plotly_chart(fig)
+
     if not marcas_seleccionadas or not tipos_seleccionados:
             st.write('Introduzca tipo de coche y una marca para visualizar la distribución del precio según Comunidad, Provincia y Municipio.')
     else:
