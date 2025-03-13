@@ -2,21 +2,26 @@ import pandas as pd
 import streamlit as st
 import pickle
 import numpy as np
+import re
 import datetime
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model, model_from_json
 from limpieza import transforma_ML
+from machinelearning.modelo_dl import graficar_historial
 
 def show():
     st.markdown("""
         # COTIZA TU COCHE
     """)
+    st.markdown("""
+        Esta es la sección de los dos modelos de predicción ML y DL para averiguar el precio de un coche, según los datos obtenidos de autocasion.es.
+    """)
     
     option = st.radio("Selecciona una opción:", [
-        "Explicación de modelos de predicción de precio", 
-        "Usa los modelos de predicción de precio"
+        "Explicación de modelos de predicción", 
+        "Usar los modelos de predicción"
     ])
     
-    if option == "Explicación de modelos de predicción de precio":
+    if option == "Explicación de modelos de predicción":
         st.markdown("""
             ## EXPLICACIÓN DE MODELOS DE PREDICCIÓN DE PRECIO
             ### FEATURE IMPORTANCE
@@ -42,15 +47,39 @@ def show():
         st.markdown("""
             Por tanto, hemos seleccionado **Random Forest**, el cual nos da una precisión de predicción del **90%** tras la búsqueda de los mejores hiperparámetros.
             ### DL (DEEP LEARNING)
-            Tras probar con distintas variantes de una red neuronal completamente conectada de regresión, con distintos hiperparámetros, distintas variantes de arquitectura y con funciones de pérdida MSE y MAE, hemos determinado que la óptima es la siguiente (numero_entradas = 5, las features seleccionadas):
+            Tras probar con distintas variantes de una red neuronal completamente conectada de regresión, con distintos hiperparámetros, distintas variantes de arquitectura y con funciones de pérdida MSE y MAE, hemos determinado que la óptima es la siguiente:
         """)
-        st.code("""
-            model = Sequential()
-            model.add(Dense(units = 64, activation='relu', input_dim=numero_entradas))
-            model.add(Dense(units = 32, activation='relu'))
-            model.add(Dense(units = 1, activation='linear'))
-            model.compile(optimizer='adam', loss='mse', metrics=['mae'])
-        """, language="python")
+
+        # Cargar la arquitectura del modelo desde el archivo JSON
+        with open("bin/modelo_dl_architecture.json", "r") as json_file:
+            model_json = json_file.read()
+        model = model_from_json(model_json)
+
+        # Mostrar el summary del modelo
+        summary_str = []
+        model.summary(print_fn=lambda x: summary_str.append(x))
+        summary_str = "\n".join(summary_str)  # Convertir la lista a un solo string
+        summary_str_html = summary_str.replace("\n", "<br>")  # Reemplazar saltos de línea por <br>
+
+        st.markdown(f"""
+        <style>
+        .custom-font {{
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+        }}
+        </style>
+
+        <p class="custom-font">{summary_str_html}</p>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+            El número de entradas es 5 (el de las features seleccionadas) y el número de épocas es 100 con EarlyStoppoing. Por tanto, en el eje X de las gráficas posteriores saldrá un número menor o igual a 100.
+        """)
+
+        st.markdown("""
+            ### MÉTRICAS
+            Las métricas obtenidas tras el último entrenamiento de la red neuronal son las siguientes:
+        """)
 
         # Mostrar las métricas almacenadas en el df
         with open("bin/metrics_dl.pickle", "rb") as file:
@@ -60,23 +89,28 @@ def show():
         # Indicar la precisión de predicción
         r2 = df_metrics['R2'][0]
         porcentaje = round(r2 * 100)
-        st.markdown(f"Tiene una precisión de predicción del **{porcentaje}%**, tal y como se puede ver en el campo R².")
+        st.markdown(f"Actualmente tiene una precisión de predicción del **{porcentaje}%**, tal y como se puede ver en el campo R².")
 
         # Imprimir el título para las gráficas
         st.markdown("### Gráficas del resultado del último entrenamiento de la red neuronal")
 
-        # Mostrar la imagen de las gráficas
-        st.image("img/graficas_dl.png", use_container_width=False)
+        # Cargar el historial de entrenamiento
+        with open("bin/history_dl.pickle", "rb") as file:
+            history = pickle.load(file)
+
+        # Graficar el historial de entrenamiento
+        fig = graficar_historial(history)
+        st.plotly_chart(fig)
 
         # Agregar la explicación en texto
         st.markdown("""
-        #### Conceptos básicos: ####
+        #### Conceptos básicos:
         - **Epoch**: Una época representa una pasada completa de todo el conjunto de datos de entrenamiento a través de la red neuronal.
         - **Loss (Pérdida)**: La función de pérdida mide qué tan bien (o mal) está realizando predicciones el modelo. Un valor bajo de pérdida indica que está haciendo buenas predicciones.
         - **MAE (Error Absoluto Medio)**: El MAE mide la magnitud promedio de los errores en las predicciones del modelo. Si es bajo, significa que las predicciones están cerca de los valores reales.
         - **val_loss y val_mae**: Estos representan la pérdida y el MAE calculados en el conjunto de datos de validación (unos separados y no vistos durante el entrenamiento).
 
-        #### Interpretación de las gráficas: ####
+        #### Interpretación de las gráficas:
         1. **Comportamiento ideal**:
             - Tanto "loss" como "val_loss" deberían disminuir con cada época, estabilizándose eventualmente.
             - De manera similar, tanto "mae" como "val_mae" deberían disminuir y estabilizarse.
@@ -94,7 +128,7 @@ def show():
             - Fluctuaciones excesivas pueden indicar una tasa de aprendizaje demasiado alta.
         """)
 
-    elif option == "Usa los modelos de predicción de precio":
+    elif option == "Usar los modelos de predicción":
         st.title("Predicción del precio de tu coche")
         
         if "step" not in st.session_state:
