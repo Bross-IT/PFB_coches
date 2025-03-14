@@ -4,7 +4,7 @@ PFB_coches es un sitio web de streamlit que trabaja con datos del sitio web auto
 
 Aquí se podrán explorar dichos datos con gráficas (EDA), comparar las características de dos coches y cotizar uno cualquiera poniendo los parámetros que más influyen en el precio.
 
-Es un **P**royecto de **F**in de **B**ootcamp de Hackaboss creado por Jonathan Ordóñez, Santiago Tomás Ourel y Ambrosio Barceló en 2025. Tienes más info en la sección "About us" de la web de streamlit.
+Es un **P**royecto de **F**in de **B**ootcamp de Hackaboss creado por Jonathan Ordóñez, Santiago Tomás Courel y Ambrosio Barceló en 2025. Tienes más info en la sección "About us" de la web de streamlit.
 
 ## Quick Start
 Crea un entorno virtual de Python e instala las dependencias necesarias para asegurar que no te falta ninguna librería:
