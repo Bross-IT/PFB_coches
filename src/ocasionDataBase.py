@@ -62,7 +62,6 @@ class OcasionDataBase:
         """
         with self.connect() as connection:
             cursor = connection.cursor(buffered=True)
-            print(f"insert_modelo_titulo {marca_id} {nombre_modelo}")
             cursor.execute(query, (marca_id, nombre_modelo))
             connection.commit()
             query_select = "SELECT modelo_id FROM modelo_titulo WHERE nombre_modelo = %s AND marca_id = %s;"
@@ -207,88 +206,98 @@ class OcasionDataBase:
                 connection.commit()
                 cursor.close()
 
-    def obtener_marcas(self) -> dict:
+    def obtener_marcas(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_marca FROM marca ORDER BY nombre_marca ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            marcas: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return marcas
         
     # pensar si devolver solo modelo_titulo o marca+modelo_titulo
-    def obtener_modelos(self) -> dict:
+    def obtener_modelos(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_modelo_titulo FROM modelo_titulo ORDER BY nombre_modelo_titulo ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            modelos: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return modelos
 
-    def obtener_combustibles(self) -> dict:
+    def obtener_combustibles(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_combustible FROM combustible ORDER BY nombre_combustible ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            combustibles: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return combustibles
     
-    def obtener_distintivos(self) -> dict:
+    def obtener_distintivos(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_distintivo FROM distintivo_ambiental ORDER BY nombre_distintivo ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            distintivos: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return distintivos
     
-    def obtener_colores(self) -> dict:
+    def obtener_colores(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_color FROM color ORDER BY nombre_color ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            colores: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return colores
     
-    def obtener_carrocerias(self) -> dict:
+    def obtener_carrocerias(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_carroceria FROM carroceria ORDER BY nombre_carroceria ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            carrocerias: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return carrocerias
 
-    def obtener_comunidades(self) -> dict:
+    def obtener_comunidades(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_comunidad FROM comunidad_autonoma ORDER BY nombre_comunidad ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            comunidades: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return comunidades
         
-    def obtener_provincias(self) -> dict:
+    def obtener_provincias(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_provincia FROM provincia ORDER BY nombre_provincia ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            provincias: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return provincias
     
-    def obtener_municipios(self) -> dict:
+    def obtener_municipios(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_municipio FROM municipio ORDER BY nombre_municipio ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
-            cursor.execute(query)    
+            cursor.execute(query)   
+            municipios: list[dict] = cursor.fetchall() 
             cursor.close()
-            return cursor.fetchall()
+            return municipios
     
-    def obtener_particulares(self) -> dict:
+    def obtener_particulares(self) -> list[dict]:
         query = "SELECT vendedor_particular_id, nombre_particular, (SELECT nombre_provincia FROM provincia WHERE provincia.provincia_id = vendedor_particular.provincia_id) as nombre_provincia FROM vendedor_particular ORDER BY nombre_particular ASC"
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            particulares: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return particulares
         
-    def obtener_coches_venta(self) -> dict:
+    def obtener_coches_venta(self) -> list[dict]:
         query = """
             SELECT referencia,
                 peninsula_baleares,
@@ -306,13 +315,13 @@ class OcasionDataBase:
                 certificado,
                 fecha_extraccion,
                 consumo,
-                (SELECT nombre_modelo FROM modelo_titulo WHERE modelo_titulo.modelo_id = coches_en_venta.modelo_id) as modelo,
+                (SELECT nombre_modelo FROM modelo_titulo WHERE modelo_titulo.modelo_id = coches_en_venta.modelo_id) as modelo_titulo,
                 antiguedad,
                 precio,
                 mes_matricula,
                 anio_matricula,
                 (SELECT nombre_concesionario FROM concesionario WHERE concesionario.concesionario_id = coches_en_venta.concesionario_id) as concesionario,
-                (SELECT url FROM url WHERE url.url_id = coches_en_venta.url_id) as url,
+                (SELECT url FROM urls WHERE urls.url_id = coches_en_venta.url_id) as url,
                 (SELECT ruta_imagen FROM ruta_imagen WHERE ruta_imagen.ruta_imagen_id = coches_en_venta.ruta_imagen_id) as ruta_imagen
             FROM coches_en_venta
             ORDER BY referencia ASC;
@@ -320,15 +329,17 @@ class OcasionDataBase:
         with self.connect() as connection:
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query)
+            coches_venta: list[dict] = cursor.fetchall()
             cursor.close()
-            return cursor.fetchall()
+            return coches_venta
         
-    def obtener_last_referencia(self) -> str:
-        query = "SELECT referencia FROM coches_en_venta WHERE fecha_extraccion = (SELECT MAX(fecha_extraccion) FROM coches_en_venta) LIMIT 1;"
+    def obtener_referencias(self) -> list[str]:
+        query = "SELECT referencia FROM coches_en_venta;"
         with self.connect() as connection:
             cursor = connection.cursor()
             cursor.execute(query)
-            referencia: str = cursor.fetchone()[0]
+            referencia: list[str] = cursor.fetchall()
+            cursor.close
             return referencia
 
 

@@ -12,15 +12,18 @@ import comparador
 import bd_page as bd
 import cotiza_tu_coche as ml
 import about_us
+import ocasionDataBase as odb
 
 from ml_func import PAGE_CONFIG
 
 def main():
     script_dir = pathlib.Path(__file__).resolve().parent
-
+    config = odb.load_config(f"{script_dir}/../.streamlit/secrets.toml", "database_user")
+    database = odb.OcasionDataBase(config)
+    dataframe = pd.DataFrame(database.obtener_coches_venta())
     st.set_page_config(**PAGE_CONFIG)
 
-    menu = ["Home", "Exploratory Data Analysis","Comparador de coches", "Cotiza tu coche", "Base de datos", "About us"]
+    menu = ["Home", "Exploratory Data Analysis","Comparador de coches", "Cotiza tu coche", "Base de datos", "Sobre nosotros"]
 
     choice = st.sidebar.selectbox(label = "Menu", options = menu, index = 0)
 
@@ -81,7 +84,7 @@ def main():
     elif choice == "Exploratory Data Analysis":
         explorador.explorador_app()
     elif choice == "Comparador de coches":
-        comparador.show()
+        comparador.show(dataframe)
     elif choice == "Cotiza tu coche":
         ml.show()
     elif choice == "Base de datos":
