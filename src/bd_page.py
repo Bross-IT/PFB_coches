@@ -33,10 +33,10 @@ def show():
     
     - **urls y ruta_imagen**: Lista de links a la página web de cada coche en autocasion.es y su respectiva ruta a la imagen principal del mismo (relación 1-1 con `coches_en_venta`).
     - **combustible, carroceria, distintivo_ambiental y color**: Contienen los distintos valores de cada uno, con ids referenciados en `coches_en_venta` (1-n).
-    - **modelo_titulo**: Contiene el nombre tal y como viene en autocasion.es, pero sin la marca, que está listada en la tabla `marca` (relación 1-1 con `coches_en_venta`).
+    - **modelo_titulo**: Contiene el nombre tal y como viene en autocasion.es, pero sin la marca, que está listada en la tabla `marca` (relación 1-n con `coches_en_venta`).
     - **marca**: Contiene todas las marcas de coches, con ids referenciados en `modelo_titulo` (1-n).
     - **concesionario**: Contiene los datos de los concesionarios que venden coches en autocasion.es, con una relación 1-n con `coches_en_venta`. Incluye referencias a ids de `municipio` y `provincia`.
-    - **vendedor_particular**: Lista de vendedores particulares con un id autoincremental, relacionados 1-1 con `modelo_titulo`.
+    - **vendedor_particular**: Lista de vendedores particulares con un id autoincremental, relacionados 1-1 con `coches_en_venta`.
     - **municipio**: Lista de municipios indicados en los concesionarios de autocasion.es (1-n).
     - **provincia**: Contiene las provincias indicadas en los concesionarios y de los vendedores particulares (1-n con ambas).
     - **comunidad_autonoma**: Contiene las comunidades autónomas, cuyos ids están referenciados en `provincia` (1-n).
