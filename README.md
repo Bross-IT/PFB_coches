@@ -22,12 +22,20 @@ Si no se pudiese ejecutar directamente de esa manera, usa python en su lugar:
 python -m streamlit run src/app.py
 ```
 
-Para ejecutar todo el proceso de actualización con una pequeña muestra (desde el scraping hasta el entrenamiento de modelos), ejecuta el siguiente script:
+Para ejecutar todo el proceso de actualización con una pequeña muestra, 20 en este caso pero puedes poner otro valor,(desde el scraping hasta el guardado en BBDD), ejecuta los siguientes scripts:
 ```bash
-python src/elscriptencuestion.py
+python scripts_proceso/script_coches.py 20
+```
+ó
+```bash
+python scripts_proceso/script_concesionario.py 20
 ```
 
-Para realizar una actualización completa (con una base de datos vacía puede llevar más de 10 horas), ejecuta el siguiente script:
+Para realizar una actualización completa (con una base de datos vacía puede llevar más de 10 horas), ejecuta los siguientes scripts:
 ```bash
-python src/scriptdeactualizacióntotal.py
+python scripts_proceso/script_coches.py
+```
+ó
+```bash
+python scripts_proceso/script_concesionario.py
 ```

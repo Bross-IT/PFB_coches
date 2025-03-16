@@ -12,11 +12,11 @@ def encode_image(image_path):
         encoded = base64.b64encode(image_file.read()).decode()
     return f"data:image/png;base64,{encoded}"
 
-def show():
+def show(df: pd.DataFrame) -> None:
     st.title("🚗 Comparador de Coches")
 
     script_dir = pathlib.Path(__file__).resolve().parent
-    df = pd.read_csv(f"{script_dir}/../data/coches_consolidado_limpio.csv")
+    #df = pd.read_csv(f"{script_dir}/../data/coches_consolidado_limpio.csv")
 
     col_1, col_2 = st.columns(2)
     coches_seleccionados = {}
@@ -27,13 +27,13 @@ def show():
 
             if coche:
                 coche_data = df[df["modelo_titulo"] == coche].iloc[0, 1:]
-                imagen = encode_image(coche_data["ruta_imagen"])
+                imagen = encode_image(f"{script_dir}/../{coche_data["ruta_imagen"]}")
                 modelo = coche
                 coches_seleccionados[f"coche_{i}"] = {"data": coche_data, "imagen": imagen, "modelo": modelo}
 
                 with st.expander(f"📌 Información detallada del coche {i}", expanded=False):
                     st.dataframe(coche_data, use_container_width=True)
-
+                    
     if coches_seleccionados.get("coche_1") and coches_seleccionados.get("coche_2"):
         if coches_seleccionados["coche_1"]["data"].name == coches_seleccionados["coche_2"]["data"].name:
             st.warning("⚠️ Selecciona dos coches diferentes para comparar.")

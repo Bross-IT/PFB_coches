@@ -9,7 +9,7 @@ import plotly.subplots as sp
 import pathlib
   
 
-def explorador_app():
+def explorador_app(df, concesionarios):
 
     script_dir = pathlib.Path(__file__).resolve().parent
 
@@ -22,7 +22,6 @@ def explorador_app():
     st.sidebar.markdown("*" * 10)
     st.sidebar.markdown("Selecciona `Año`, `Marca` y `Tipo de Coche` para explorar los datos.")
 
-    df = pd.read_csv(f"{script_dir}/../data/coches_consolidado_limpio.csv")
     q1 = df['precio'].quantile(0.25)
     q3 = df['precio'].quantile(0.75)
     ric = q3 - q1
@@ -396,7 +395,6 @@ def explorador_app():
         st.write(f"Aquí podemos apreciar la distribución del consumo medio según marca, tipo de coche y combustible de coches {marcas_txt} de {tipos_txt} entre los años {año_seleccionado[0]} y {año_seleccionado[1]}.")    
         st.write(observacion_boxplot)
 
-    concesionarios = pd.read_csv(f"{script_dir}/../data/concesionarios_limpio.csv")
     concesionarios["municipio"] = concesionarios["municipio"].str.replace("Municipio: ", "", regex=True)
     
     concesionarios['nombre'] = concesionarios['nombre'].apply(lambda x: x.upper())

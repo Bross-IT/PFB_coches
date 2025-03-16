@@ -21,7 +21,7 @@ def normalizar(df: pd.DataFrame, columnas: list[str] = ["precio", "kilometraje"]
     # (algunos concesionarios ponen más de una vez el mismo coche, porque se puede
     # recoger en puntos físicos distintos en España).
     if "modelo_titulo" in df_normalizado.columns:
-        columnas_clave = ["modelo_titulo", "kilometraje", "precio"]
+        columnas_clave: list[str] = ["modelo_titulo", "kilometraje", "precio"]
         df_normalizado = df_normalizado.drop_duplicates(subset=columnas_clave, keep="first")
 
     for columna in columnas:

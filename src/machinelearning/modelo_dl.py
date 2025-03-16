@@ -171,4 +171,4 @@ def generar_y_entrenar_modelo_dl(X_train, X_test, y_train, y_test):
 
     # graficar_historial(history)
 
-# generar_y_entrenar_modelo_dl(X_train, X_test, y_train, y_test)
+generar_y_entrenar_modelo_dl(X_train, X_test, y_train, y_test)
