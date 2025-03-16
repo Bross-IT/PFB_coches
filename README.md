@@ -39,3 +39,17 @@ python scripts_proceso/script_coches.py
 ```bash
 python scripts_proceso/script_concesionario.py
 ```
+## Entrenamiento de modelos predictivos
+Para entrenar el modelo de machine learning (predicción con random forest), ejecuta:
+```bash
+python src/machinelearning/modelo_ml.py
+```
+Para entrenar el modelo de deep learning (predicción con red neuronal), ejecuta:
+```bash
+python src/machinelearning/modelo_dl.py
+```
+### NOTA:
+Hay un bug en este último script, ya que el archivo history_dl.pickle se genera mal (a pesar de que el código sea igual que en el notebook). Sin estar resuelto, en su lugar, ejecuta las celdas del notebook hasta la parte de red neuronal de regresión (6ª celda, las dos siguientes no hacen falta):
+```bash
+notebooks/ejecutar_deep_learning.ipynb
+```
