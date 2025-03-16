@@ -1,6 +1,7 @@
 import pandas as pd
 import pathlib
 import sys
+import argparse
 
 from datetime import datetime
 
@@ -12,8 +13,11 @@ from extraction import extraction_func
 from ocasionDataBase import OcasionDataBase, load_config
 from limpieza import limpia
 
+parser = argparse.ArgumentParser(description="Script que extrae datos de coches de la web autocasion.es.")
+parser.add_argument("num_extraer", type=int, nargs="?", default=None, help="Número de coches a extraer (por defecto todos).")
 
-extraction_func.scraper_coches("https://www.autocasion.com/coches-ocasion?direction=desc&page=1&sort=updated_at", 30)
+args = parser.parse_args()
+extraction_func.scraper_coches("https://www.autocasion.com/coches-ocasion?direction=desc&page=1&sort=updated_at", args.num_extraer)
 
 hoy = datetime.now().strftime('%d-%m-%Y')
 limpia.limpiar_csv(f"{CURRENT_DIR}/../data/coches_segunda_mano-{hoy}.csv")

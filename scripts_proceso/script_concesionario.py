@@ -1,6 +1,7 @@
 import pandas as pd
 import pathlib
 import sys
+import argparse
 
 CURRENT_DIR = pathlib.Path(__file__).resolve().parent
 src_path = CURRENT_DIR.parent / "src"
@@ -10,8 +11,11 @@ from extraction import extraction_func
 from ocasionDataBase import OcasionDataBase, load_config
 from limpieza import limpia
 
+parser = argparse.ArgumentParser(description="Script que extrae datos de concesionarios de la web autocasion.es.")
+parser.add_argument("num_extraer", type=int, nargs="?", default=None, help="Número de concesionarios a extraer (por defecto todos).")
 
-extraction_func.scraper_concesionario("https://www.autocasion.com/concesionarios?order=nombre-a-z", 10)
+args = parser.parse_args()
+extraction_func.scraper_concesionario("https://www.autocasion.com/concesionarios?order=nombre-a-z", args.num_extraer)
 
 limpia.limpiar_csv_conces(f"{CURRENT_DIR}/../data/concesionarios.csv")
 df_concesionarios = pd.read_csv(f"{CURRENT_DIR}/../data/concesionarios_limpio.csv")
