@@ -14,8 +14,7 @@ def encode_image(image_path):
 
 def show(df: pd.DataFrame) -> None:
     st.title("🚗 Comparador de Coches")
-    df = df.convert_dtypes()
-    st.write(df.dtypes)
+
     script_dir = pathlib.Path(__file__).resolve().parent
     #df = pd.read_csv(f"{script_dir}/../data/coches_consolidado_limpio.csv")
 

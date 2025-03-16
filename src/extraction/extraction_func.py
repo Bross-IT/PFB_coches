@@ -113,7 +113,7 @@ def scraper_coches(url_page: str, num_extraer: int = None) -> None:
 
             urls_coches: list[str] = [ article.find_element(by = By.TAG_NAME, value = "a").get_attribute("href") for article in articles ]
             urls_coches = [ url for url in urls_coches if url.split("-")[-1] not in referencias_guardadas]
-            data_coches: np.array = []  
+            data_coches: list[np.array] = []  
 
             for url in urls_coches:
                 selenium_scraper.script_scroll(200)

@@ -161,7 +161,7 @@ def show():
                 "cambio_automatico": [1 if cambio_automatico == "Sí" else 0],
                 "potencia": [potencia],
                 "marca_sola": [marca],
-                "anio_matricula": [anio_actual - anio_matricula]
+                "antiguedad": [anio_actual - anio_matricula]
             })
             df = transforma_ML.normalizar(df, ["kilometraje", "potencia"])
             with open("bin/marca_sola_precio_encoder.pickle", "rb") as file:

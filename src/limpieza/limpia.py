@@ -677,7 +677,7 @@ def tratamiento_nans(ruta_csv_consolidado):
         
         if any(x in modelo_upper for x in ['GASOLINA', 'TSI', 'TFSI', 'MPI', 'FSI']):
             return 'Gasolina'
-        # Selecciono el primer elemento de modelo titulo (generalmente el modelo) y si es igual y no tiene nan en combustible, elijo el combustible mmoda
+        # Selecciono el primer elemento de modelo titulo (generalmente el modelo) y si es igual y no tiene nan en combustible, elijo el combustible moda
         primera_palabra = row['modelo_titulo'].split()[0] 
         similares = df[df['modelo_titulo'].str.contains(primera_palabra, case=False, na=False)]
 

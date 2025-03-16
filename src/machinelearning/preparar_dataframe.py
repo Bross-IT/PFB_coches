@@ -2,26 +2,34 @@ import pandas as pd
 import pickle
 import pathlib
 from datetime import datetime
+from sklearn.preprocessing import OneHotEncoder
 
 import sys
 import os
 
-CURRENT_DIR: str = os.path.dirname(__file__)
-sys.path.append(os.path.abspath(os.path.join(CURRENT_DIR, "..")))
+CURRENT_DIR = pathlib.Path(__file__).resolve().parent
+src_path = CURRENT_DIR.parent
+sys.path.append(str(src_path))
 
 from limpieza import limpia, transforma_ML
-from sklearn.preprocessing import OneHotEncoder
+import ocasionDataBase as odb
+
 
 TARGET: str = "precio"
 
-df: pd.DataFrame = limpia.tratamiento_nans(f"{CURRENT_DIR}/../../data/coches_consolidado_limpio.csv")
+ruta_config: str = f"{CURRENT_DIR}/../../.streamlit/secrets.toml"
+dict_config: dict = odb.load_config(ruta_config, "database_user")
+
+db: odb.OcasionDataBase = odb.OcasionDataBase(dict_config)
+
+df: pd.DataFrame = pd.DataFrame(db.obtener_coches_venta())
 df = transforma_ML.normalizar(df, ["kilometraje", "potencia", "precio"])
 
 anio_actual: int = datetime.now().year
 df['anio_matricula'] = df['anio_matricula'].apply(lambda x: anio_actual - x)
 
 # a raíz de la feature selection
-df_modelo: pd.DataFrame = df[['kilometraje', 'cambio_automatico', 'potencia', 'marca_sola', 'anio_matricula', TARGET]]
+df_modelo: pd.DataFrame = df[['kilometraje', 'cambio_automatico', 'potencia', 'marca_sola', 'antiguedad', TARGET]]
 
 with open(f"{CURRENT_DIR}/../../bin/cambio_automatico_encoder.pickle", "rb") as file:
     cambio_automatico_encoder: OneHotEncoder = pickle.load(file)

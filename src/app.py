@@ -20,7 +20,8 @@ def main():
     script_dir = pathlib.Path(__file__).resolve().parent
     config = odb.load_config(f"{script_dir}/../.streamlit/secrets.toml", "database_user")
     database = odb.OcasionDataBase(config)
-    dataframe = pd.DataFrame(database.obtener_coches_venta())
+    df_coches = pd.DataFrame(database.obtener_coches_venta())
+    df_concesionarios = pd.DataFrame(database.obtener_concesionarios())
     st.set_page_config(**PAGE_CONFIG)
 
     menu = ["Home", "Exploratory Data Analysis","Comparador de coches", "Cotiza tu coche", "Base de datos", "Sobre nosotros"]
@@ -52,7 +53,7 @@ def main():
                                 
                     """)
 
-        df = pd.read_csv(f'{script_dir}/../data/municipios_coropletico.csv')
+        #df = pd.read_csv(f'{script_dir}/../data/municipios_coropletico.csv')
 
         mapa_opcion = st.selectbox(
             label="Selecciona el nivel de geografía para visualizar el mapa",
@@ -82,9 +83,9 @@ def main():
             st.components.v1.html(mapa_municipio_html, height=1024, width=1180)
 
     elif choice == "Exploratory Data Analysis":
-        explorador.explorador_app()
+        explorador.explorador_app(df_coches, df_concesionarios)
     elif choice == "Comparador de coches":
-        comparador.show(dataframe)
+        comparador.show(df_coches)
     elif choice == "Cotiza tu coche":
         ml.show()
     elif choice == "Base de datos":

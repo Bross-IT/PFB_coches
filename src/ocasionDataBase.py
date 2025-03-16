@@ -312,13 +312,31 @@ class OcasionDataBase:
                 puertas,
                 certificado,
                 fecha_extraccion,
-                consumo,
+                consumo as consumo_medio,
                 (SELECT nombre_modelo FROM modelo_titulo WHERE modelo_titulo.modelo_id = coches_en_venta.modelo_id) as modelo_titulo,
+                (SELECT nombre_marca FROM marca INNER JOIN modelo_titulo ON marca.marca_id = modelo_titulo.marca_id WHERE modelo_titulo.modelo_id = coches_en_venta.modelo_id) as marca_sola,
                 antiguedad,
                 precio,
                 mes_matricula,
                 anio_matricula,
-                (SELECT nombre_concesionario FROM concesionario WHERE concesionario.concesionario_id = coches_en_venta.concesionario_id) as concesionario,
+                CASE 
+                    WHEN vendedor_profesional = 1 THEN (SELECT nombre_concesionario FROM concesionario WHERE concesionario.concesionario_id = coches_en_venta.concesionario_id)
+                    ELSE (SELECT nombre_vendedor_particular FROM vendedor_particular WHERE vendedor_particular.referencia = coches_en_venta.referencia)
+                END AS nombre_vendedor,
+                CASE 
+                    WHEN vendedor_profesional = 1 THEN (SELECT nombre_comunidad_autonoma FROM concesionario as c INNER JOIN provincia as p ON c.provincia_id = p.provincia_id 
+                        INNER JOIN comunidad_autonoma as ca ON ca.comunidad_autonoma_id = p.comunidad_autonoma_id 
+                        WHERE c.concesionario_id = coches_en_venta.concesionario_id)
+                    ELSE (SELECT nombre_comunidad_autonoma FROM vendedor_particular as v INNER JOIN provincia as p ON v.provincia_id = p.provincia_id 
+                        INNER JOIN comunidad_autonoma as ca ON ca.comunidad_autonoma_id = p.comunidad_autonoma_id 
+                        WHERE v.referencia = coches_en_venta.referencia)
+                END AS comunidad,
+                CASE 
+                    WHEN vendedor_profesional = 1 THEN (SELECT nombre_provincia FROM concesionario as c INNER JOIN provincia as p ON c.provincia_id = p.provincia_id 
+                        WHERE c.concesionario_id = coches_en_venta.concesionario_id)
+                    ELSE (SELECT nombre_provincia FROM vendedor_particular as v INNER JOIN provincia as p ON v.provincia_id = p.provincia_id 
+                        WHERE v.referencia = coches_en_venta.referencia)
+                END AS provincia,
                 (SELECT url FROM urls WHERE urls.url_id = coches_en_venta.url_id) as url,
                 (SELECT ruta_imagen FROM ruta_imagen WHERE ruta_imagen.ruta_imagen_id = coches_en_venta.ruta_imagen_id) as ruta_imagen
             FROM coches_en_venta
