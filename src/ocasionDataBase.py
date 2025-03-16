@@ -113,38 +113,31 @@ class OcasionDataBase:
             result = cursor.fetchone()
             return result[0] if result else None
 
-    def process_csv_concesionarios(self, file_path):
-        df = pd.read_csv(file_path)
-        if len(df) > self.get_concesionario_count():
-            query = """
-            INSERT INTO concesionario (nombre_concesionario, calle, provincia_id, codigo_postal, municipio_id)
-            VALUES (%s, %s, %s, %s, %s)
-            ON DUPLICATE KEY UPDATE nombre_concesionario = VALUES(nombre_concesionario);"""    
-            
-            with self.connection.cursor(buffered=True) as cursor:
-                for _, row in df.iterrows():
-                    provincia_id = None
-                    municipio_id = None
-                    if pd.notna(row["provincia"]) and row["provincia"] != "":
-                        provincia_id = self.insert_or_get_id("provincia", "nombre_provincia", row["provincia"])
-                    if pd.notna(row["municipio"]) and row["municipio"] != "":
-                        municipio_id = self.insert_or_get_id("municipio", "nombre_municipio", row["municipio"])
-                    
-                    cursor.execute(query, (
-                        row["nombre"],
-                        row["calle"] if pd.notna(row["calle"]) else None,
-                        provincia_id,
-                        int(row["codigo_postal"]) if pd.notna(row["codigo_postal"]) else None,
-                        municipio_id
-                    ))
-                    self.connection.commit()
+    def process_datos_concesionarios(self, df: pd.DataFrame) -> None:
+        query = """
+        INSERT INTO concesionario (nombre_concesionario, calle, provincia_id, codigo_postal, municipio_id)
+        VALUES (%s, %s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE nombre_concesionario = VALUES(nombre_concesionario);"""    
+        
+        with self.connection.cursor(buffered=True) as cursor:
+            for _, row in df.iterrows():
+                provincia_id = None
+                municipio_id = None
+                if pd.notna(row["provincia"]) and row["provincia"] != "":
+                    provincia_id = self.insert_or_get_id("provincia", "nombre_provincia", row["provincia"])
+                if pd.notna(row["municipio"]) and row["municipio"] != "":
+                    municipio_id = self.insert_or_get_id("municipio", "nombre_municipio", row["municipio"])
+                
+                cursor.execute(query, (
+                    row["nombre"],
+                    row["calle"] if pd.notna(row["calle"]) else None,
+                    provincia_id,
+                    int(row["codigo_postal"]) if pd.notna(row["codigo_postal"]) else None,
+                    municipio_id
+                ))
+                self.connection.commit()
 
-    def process_csv_coches(self, file_path):
-        df = pd.read_csv(file_path, parse_dates=["fecha_extraccion"], dtype={
-            "puertas": "Int64", "mes_matricula": "Int64", "anio_matricula": "Int64"
-        })
-        max_fecha = self.get_max_fecha_extraccion()
-        df = df[df["fecha_extraccion"] >= max_fecha] if max_fecha else df
+    def process_datos_coches(self, df: pd.DataFrame) -> None:
         anio_actual = datetime.now().year
         
         for _, row in df.iterrows():
@@ -229,7 +222,6 @@ class OcasionDataBase:
 
         return marcas
         
-    # pensar si devolver solo modelo_titulo o marca+modelo_titulo
     def obtener_modelos(self) -> list[dict]:
         query = "SELECT DISTINCT nombre_modelo_titulo FROM modelo_titulo ORDER BY nombre_modelo_titulo ASC"
         with self.connection.cursor(dictionary=True) as cursor:
@@ -337,13 +329,39 @@ class OcasionDataBase:
             coches_venta: list[dict] = cursor.fetchall()
             
         return coches_venta
+    
+    def obtener_concesionarios(self) -> list[dict]:
+        query = """
+            SELECT concesionario_id, 
+                nombre_concesionario as nombre, 
+                calle, 
+                (SELECT nombre_municipio FROM municipio WHERE municipio.municipio_id = concesionario.municipio_id) as municipio,
+                (SELECT nombre_provincia FROM provincia WHERE provincia.provincia_id = concesionario.provincia_id) as provincia,
+                codigo_postal
+            FROM concesionario
+            ORDER BY nombre_concesionario ASC;
+        """
+        with self.connection.cursor(dictionary=True) as cursor:
+            cursor.execute(query)
+            concesionarios: list[dict] = cursor.fetchall()
+        
+        return concesionarios
         
     def obtener_referencias(self) -> list[str]:
         query = "SELECT referencia FROM coches_en_venta;"
         with self.connection.cursor() as cursor:
             cursor.execute(query)
-            referencia: list[str] = cursor.fetchall()
+            result = cursor.fetchall()
+            referencias: list[str] = [ f"ref{row[0]}" for row in result ]
 
-        return referencia
+        return referencias
 
+    def obtener_nombres_concesionarios(self) -> list[str]:
+        query = "SELECT nombre_concesionario FROM concesionario;"
+        with self.connection.cursor() as cursor:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            nombres_concesionarios: list[str] = [ row[0] for row in result ]
+        
+        return nombres_concesionarios
 
