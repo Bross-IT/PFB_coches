@@ -7,7 +7,7 @@ import datetime
 import plotly.express as px
 from tensorflow.keras.models import load_model, model_from_json
 from limpieza import transforma_ML
-from machinelearning.modelo_dl import graficar_historial
+from machinelearning.graficar_dl import graficar_historial
 
 def show():
     st.markdown("""
