@@ -106,7 +106,7 @@ def show():
         st.markdown("### Gráficas del resultado del último entrenamiento de la red neuronal")
 
         # Cargar el historial de entrenamiento
-        with open("bin/history_dl.pickle", "rb") as file:
+        with open("bin/history_dl_2.pickle", "rb") as file:
             history = pickle.load(file)
 
         # Graficar el historial de entrenamiento
