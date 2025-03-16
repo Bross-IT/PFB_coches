@@ -6,12 +6,13 @@ Aquí se podrán explorar dichos datos con gráficas (EDA), comparar las caracte
 
 Es un **P**royecto de **F**in de **B**ootcamp de Hackaboss creado por Jonathan Ordóñez, Santiago Tomás Courel y Ambrosio Barceló en 2025. Tienes más info en la sección "About us" de la web de streamlit.
 
-## Quick Start
+## Requisitos previos
 Crea un entorno virtual de Python e instala las dependencias necesarias para asegurar que no te falta ninguna librería:
 ```bash
 pip install -r requirements.txt
 ```
 
+## Ver página de streamlit
 Para visualizar la página con los datos ya extraídos y listos en el repositorio, ejecuta en una terminal en local el comando para abrir streamlit en el navegador por defecto.
 ```bash
 streamlit run src/app.py
@@ -21,8 +22,8 @@ Si no se pudiese ejecutar directamente de esa manera, usa python en su lugar:
 ```bash
 python -m streamlit run src/app.py
 ```
-
-Para ejecutar todo el proceso de actualización con una pequeña muestra, 20 en este caso pero puedes poner otro valor,(desde el scraping hasta el guardado en BBDD), ejecuta los siguientes scripts:
+## Extracción de datos y actualización de base de datos
+Para ejecutar todo el proceso de actualización con una pequeña muestra de coches/concesionarios (desde el scraping hasta el guardado en BBDD), 20 en el ejemplo, ejecuta los siguientes scripts:
 ```bash
 python scripts_proceso/script_coches.py 20
 ```
@@ -49,7 +50,7 @@ Para entrenar el modelo de deep learning (predicción con red neuronal), ejecuta
 python src/machinelearning/modelo_dl.py
 ```
 ### NOTA:
-Hay un bug en este último script, ya que el archivo history_dl.pickle se genera mal (a pesar de que el código sea igual que en el notebook). Sin estar resuelto, en su lugar, ejecuta las celdas del notebook hasta la parte de red neuronal de regresión (6ª celda, las dos siguientes no hacen falta):
+Hay un bug en este último script, ya que el archivo pickle del history para graficar luego en Cotiza Tu Coche en streamlit se genera mal (a pesar de que el código sea igual que en el notebook). Sin estar resuelto, en su lugar, ejecuta las celdas del notebook hasta la parte de red neuronal de regresión (es decir, hasta la 6ª celda, pues las dos siguientes no hacen falta):
 ```bash
 notebooks/ejecutar_deep_learning.ipynb
 ```
